@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
     //if UIManager.PlacingSelectedUnit, if !GridManager.GridSquareOccupied ShopManager.
     //if (UIManager.UnitToBuyIsSelected) GetGridObjectFromMouseClick() return;
     
-    public static InputManager Instance; // Was experimenting with whether or not I needed a singleton. Went events instead.
+    /*public static InputManager Instance; // Was experimenting with whether or not I needed a singleton. Went events instead.
 
     private GridObject _gridObject;
 
@@ -138,5 +138,5 @@ public class InputManager : MonoBehaviour
         }
 
         return mousePositionAlongGridVisual;
-    }
+    }*/
 }
