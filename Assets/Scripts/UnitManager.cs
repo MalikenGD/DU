@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UnitManager : MonoBehaviour
 {
-    //TODO: Refactor for multiplayer
+    /*//TODO: Refactor for multiplayer
     //Create and fill a new list of units for each player, and enemy? This should be on the server..
     //Dictionary won't work for MP as is, would need the key to be some sort of playerID instead of faction.
 
@@ -118,5 +118,5 @@ public class UnitManager : MonoBehaviour
         gridManager.UpdateUnitGridPosition(unitDestinationGridPosition, _selectedUnit);
         UpdateUnitWorldPosition(gridManager.FormatWorldPositionForGridSnapping(unitPosition));
         _selectedUnitOriginalPosition = Vector3.zero;
-    }
+    }*/
 }

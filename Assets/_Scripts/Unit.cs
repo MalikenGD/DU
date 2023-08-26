@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,16 +20,16 @@ public class Unit : MonoBehaviour
 
     private Faction _factionType;
 
-    private Unit target;
+    private Unit _target;
 
     private GridObject _gridObject;
 
     private void Start()
     {
         //TODO: Refactor to constructor
-        SetGridObject(GridManager.Instance.GetGridObjectAtPosition(GetComponent<Transform>().position));
-        _gridPosition = GridManager.Instance.ConvertFromWorldPositionToGridPosition(transform.position);
-        GridManager.Instance.SetUnitAtGridPosition(_gridPosition, this);
+        //SetGridObject(GridManager.Instance.GetGridObjectAtPosition(GetComponent<Transform>().position));
+        //_gridPosition = GridManager.Instance.ConvertFromWorldPositionToGridPosition(transform.position);
+        //GridManager.Instance.SetUnitAtGridPosition(_gridPosition, this);
     }
 
 

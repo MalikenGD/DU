@@ -1,47 +1,18 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager
 {
-    [SerializeField] private Transform unitVisual; // A plane that holds a semi-transparent grid layout to show players where to place units
-    [SerializeField] private Transform gridVisual; // DEBUG: Helps me see which grid cells are occupied
-    [SerializeField] private Vector2 gridSize;
-    private List<GridObject> _gridObjects;
-    public static GridManager Instance;
-
-    private void Awake()
+    private GridDataSO _gridDataSO;
+    private Grid _grid;
+    
+    public GridManager()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        } else
-        {
-            Destroy(gameObject);
-        }
-        
-        //Debug visual objects to show me where each grid square is, and if it's occupied
-        _gridObjects = new List<GridObject>();
-        for (int i = 0; i < gridSize.x; i++)
-        {
-            for (int j = 0; j < gridSize.y; j++)
-            {
-                var gridObject = new GridObject {_gridPosition = new GridPosition(i,j)};
-                _gridObjects.Add(gridObject);
-                var debugUnit = Instantiate(unitVisual,
-                    new Vector3(
-                        gridVisual.GetComponent<Renderer>().bounds.min.x + gridObject._gridPosition.x + 0.5f,
-                        unitVisual.transform.position.y,
-                        gridVisual.GetComponent<Renderer>().bounds.min.z + gridObject._gridPosition.z + 0.5f),
-                    quaternion.identity).GetComponent<Unit>();
-
-            }
-        }
+        _gridDataSO = Resources.Load<GridDataSO>("Grid/GridDataSO");
+        _grid = new Grid(_gridDataSO.gridSize);
     }
-
+    
     public Vector3 FormatWorldPositionForGridSnapping(Vector3 dirtyWorldPosition)
     {
         //Takes the world position from mouse or other sources and rounds it to snap with center of grid cells
@@ -82,7 +53,7 @@ public class GridManager : MonoBehaviour
 
     public void SetUnitAtGridPosition(GridPosition gridPosition, Unit unit)
     {
-        foreach (var gridObject in _gridObjects)
+        foreach (var gridObject in _grid.GetGridObjectList())
         {
             if (gridObject._gridPosition.Equals(gridPosition))
             {
@@ -95,7 +66,7 @@ public class GridManager : MonoBehaviour
 
     private void ClearUnitAtGridPosition(GridPosition gridPosition)
     {
-        foreach (var gridObject in _gridObjects)
+        foreach (var gridObject in _grid.GetGridObjectList())
         {
             if (gridObject._gridPosition.Equals(gridPosition))
             {
@@ -108,7 +79,7 @@ public class GridManager : MonoBehaviour
     {
         Vector3 worldPos = ConvertFromGridPositionToWorldPosition(gridPosition);
         
-        foreach (var gridObject in _gridObjects)
+        foreach (var gridObject in _grid.GetGridObjectList())
         {
             if (gridObject._gridPosition.Equals(gridPosition))
             {
@@ -124,7 +95,7 @@ public class GridManager : MonoBehaviour
     {
         GridPosition gridPosition = ConvertFromWorldPositionToGridPosition(worldPos);
 
-        foreach (var gridObject in _gridObjects)
+        foreach (var gridObject in _grid.GetGridObjectList())
         {
             if (gridObject._gridPosition.Equals(gridPosition))
             {
@@ -160,7 +131,7 @@ public class GridManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            foreach (var gridObject in _gridObjects)
+            foreach (var gridObject in _grid.GetGridObjectList())
             {
                 Debug.Log($"Do I have a occupying unit?: {gridObject.AmIOccupied()}");
             }
@@ -168,3 +139,27 @@ public class GridManager : MonoBehaviour
         
     }
 }
+
+public class Grid
+{
+    private List<GridObject> _gridObjects;
+
+    public Grid(Vector2 gridSize)
+    {
+        _gridObjects = new List<GridObject>();
+        for (int i = 0; i < gridSize.x; i++)
+        {
+            for (int j = 0; j < gridSize.y; j++)
+            {
+                var gridObject = new GridObject {_gridPosition = new GridPosition(i,j)};
+                _gridObjects.Add(gridObject);
+            }
+        }
+    }
+
+    public List<GridObject> GetGridObjectList()
+    {
+        return _gridObjects;
+    }
+}
+
