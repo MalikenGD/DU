@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class GridManager
+public class GridManager : MonoBehaviour
 {
-    private GridDataSO _gridDataSO;
+    [SerializeField] private GridDataSO gridDataSO;
     private Grid _grid;
+    private bool _cellSelected = false;
     
-    public GridManager()
+    private void Start()
     {
-        _gridDataSO = Resources.Load<GridDataSO>("Grid/GridDataSO");
-        _grid = new Grid(_gridDataSO.gridSize);
+        
+        _grid = new Grid(gridDataSO.gridSize);
     }
     
     public Vector3 FormatWorldPositionForGridSnapping(Vector3 dirtyWorldPosition)
@@ -137,6 +139,11 @@ public class GridManager
             }
         }
         
+    }
+
+    public bool GetCellSelectedStatus()
+    {
+        return _cellSelected;
     }
 }
 

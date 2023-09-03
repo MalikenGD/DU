@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class World : MonoBehaviour
 {
     public static World Instance;
+    [SerializeField] private Canvas parentCanvasPrefab;
+    private Canvas _parentCanvas;
 
     public event Action<GameState> OnGameStateChanged;
 
@@ -15,6 +18,7 @@ public class World : MonoBehaviour
     private List<Unit> playerUnits;
     
     //TODO: Does World or GameMode need data?
+    [SerializeField] private GameObject gameModePrefab;
     private GameMode _gameMode;
     private UIManager _uiManager;
 
@@ -29,8 +33,9 @@ public class World : MonoBehaviour
             Destroy(gameObject);
         }
         
-        _uiManager = Instantiate(Resources.Load<UIManager>("UI/UIManager").GetComponent<UIManager>());
-        _gameMode = new GameMode();
+        _parentCanvas = Instantiate(parentCanvasPrefab);
+        _uiManager = new UIManager();
+        _gameMode = Instantiate(gameModePrefab, transform).GetComponent<GameMode>();
     }
 
     private void OnEnable()
@@ -49,10 +54,16 @@ public class World : MonoBehaviour
         //Is this best? And have every other script subscribe to this?
         OnGameStateChanged?.Invoke(currentGameState);
     }
+    
 
-    public void CreateUIObject(int selection, object builder)
+    public Canvas GetParentCanvas()
     {
-        //Does it make sense for the World to manage _uiManager and use the UIObjectFactory?
-        _uiManager.BuildUI(selection,builder);
+        return _parentCanvas;
+    }
+
+    public UIBehaviour BuildUI(GameObject uiPrefab, object builder)
+    {
+        return _uiManager.BuildUI(uiPrefab, builder);
     }
 }
+

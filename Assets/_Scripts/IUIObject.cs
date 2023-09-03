@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IUIObject
 {
     GameObject GetUIGameObject();
+
+    void Init(object builder);
 }

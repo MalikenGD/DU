@@ -3,32 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMode
+public class GameMode : MonoBehaviour
 {
     public event Action<GameState> OnGameStateChanged;
 
+    [SerializeField] private GameObject gridManagerPrefab;
+    [SerializeField] private GameObject shopPrefab;
 
-
+    private Transform _parentTransform;
     private GridManager _gridManager;
     private Shop _shop;
-    private GameState currentGameState;
+    private GameState _currentGameState;
     
 
     
-    public GameMode()
+    private void Start()
     {
         ChangeState(GameState.GameStart);
-        _gridManager = new GridManager();
-        _shop = new Shop(Resources.Load<UnitCompleteListSO>("Unit/UnitCompleteList").GetList());
+        
+
+        _gridManager = Instantiate(gridManagerPrefab, transform).GetComponent<GridManager>();
+        _shop = Instantiate(shopPrefab, transform).GetComponent<Shop>();
+        _shop.SetGridManagerReference(_gridManager);
     }
     private void ChangeState(GameState newGameState)
     {
         
         //TODO: Fill in with logic depending on how to broadcast state across classes
-        if (newGameState == currentGameState) return;
+        if (newGameState == _currentGameState) return;
         
-        currentGameState = newGameState;
-        switch (currentGameState)
+        _currentGameState = newGameState;
+        switch (_currentGameState)
         {
             case GameState.GameStart:
                 
@@ -45,9 +50,8 @@ public class GameMode
                 
         }
         
-        OnGameStateChanged?.Invoke(currentGameState);
+        OnGameStateChanged?.Invoke(_currentGameState);
     }
-    
 }
 
 

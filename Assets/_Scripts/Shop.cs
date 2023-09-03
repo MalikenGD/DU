@@ -1,74 +1,134 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 //using Random = UnityEngine.Random;
 
-public class Shop
+public class Shop : MonoBehaviour
 {
-    private readonly List<UnitDataSO> _listOfAllUnitData;
-    private List<UnitDataSO> _unitsCurrentlyInShop = new List<UnitDataSO>();
-    private List<Card> _listOfActiveCards = new List<Card>();
+    [SerializeField] private ShopDataSO _shopData;
+    
     private const int MaxCardsAllowedInHand = 5;
+    
+    
+    private GridManager _gridManagerReference;
+    private Transform _parentTransform;
+    private List<UnitDataSO> _listOfAllUnitData;
+    private List<Card> _listOfCardsInHand = new List<Card>();
+    private UnitDataSO _selectedCardUnitData;
+    private bool _cardSelected = false;
+    
 
-    public Shop(List<UnitDataSO> listOfAllUnitData)
+    private void Start()
     {
-        _listOfAllUnitData = listOfAllUnitData;
-        
+        _listOfAllUnitData = _shopData.GetUnitDataSOList();
+        if (_listOfAllUnitData.Count <= 1)
+        {
+            Debug.LogError("List of AllUnitData is too low/empty");
+            throw new Exception();
+        }
+
+        InitializeCards();
+        RandomizeHandOfCards();
         CreateShopUI();
-        RandomizeShop();
+    }
+
+    private void Update()
+    {
+        if (_cardSelected)
+        {
+            if (_gridManagerReference.GetCellSelectedStatus())
+            {
+                //Instantiate(_selectedCardUnitData.GetUnitPrefab(), transform.Position, quaternion.identity);
+                _cardSelected = false;
+                //Reset selectedCell as well. But how? Event in World, or _gridManagerReference.ResetSelectedCell()?
+            }
+        }
+    }
+
+
+    private void InitializeCards()
+    {
+        for (int i = 0; i < MaxCardsAllowedInHand; i++)
+        {
+            _listOfCardsInHand.Add(Instantiate(_shopData.GetCardPrefab(), transform).GetComponent<Card>());
+        }
+
+        RegisterToCardEvents();
+    }
+
+    private void RegisterToCardEvents()
+    {
+        foreach (Card card in _listOfCardsInHand)
+        {
+            card.OnCardSelected += SetCardSelected;
+        }
     }
 
     private void CreateShopUI()
     {
-        World.Instance.CreateUIObject(0, this);
+        World.Instance.BuildUI(_shopData.GetShopUIPrefab(), this);
     }
     
 
     //TODO: On state updated to BuyPhase, randomize Shop for UI
     //This should subscribe to World.OnStateUpdated?
-    private void RandomizeShop()
+    private void RandomizeHandOfCards()
     {
-        List<UnitDataSO> listOfRandomUnits = SelectUnitsForShopAtRandom();
-
-        foreach (UnitDataSO unit in listOfRandomUnits)
+        List<UnitDataSO> listOfRandomUnits = ChooseUniqueUnitsAtRandom(_listOfCardsInHand.Count);
+        
+        for (int i = 0; i < MaxCardsAllowedInHand; i++)
         {
-            if (_listOfActiveCards.Count < MaxCardsAllowedInHand)
-            {
-                _listOfActiveCards.Add(new Card(unit));
-            }
-            else
-            {
-                foreach (Card card in _listOfActiveCards)
-                {
-                    if (card.GetUnitData() != unit) card.SetUnitData(unit);
-                }
-            }
+            _listOfCardsInHand[i].SetUnitData(listOfRandomUnits[i]);
         }
     }
 
-    private List<UnitDataSO> SelectUnitsForShopAtRandom()
+    //List will have no duplicates
+    private List<UnitDataSO> ChooseUniqueUnitsAtRandom(int numberOfUnits)
     {
-        _unitsCurrentlyInShop.Clear();
+        
+        List<UnitDataSO> randomizedUnits = new List<UnitDataSO>();
 
-        while (_unitsCurrentlyInShop.Count < MaxCardsAllowedInHand)
+        for (int i = 0; i < numberOfUnits; i++)
         {
-            if (_listOfAllUnitData.Count < MaxCardsAllowedInHand)
+            UnitDataSO randomUnitData = ChooseUnitAtRandom();
+
+            while (randomizedUnits.Contains(randomUnitData))
             {
-                Debug.LogError($"Amount of units available to populate shop is too few: {_listOfAllUnitData.Count}, or maximum allowed cards is too few: {MaxCardsAllowedInHand}");
-                break;
+                randomUnitData = ChooseUnitAtRandom();
             }
-            int randomNumber = Random.Range(0, _listOfAllUnitData.Count);
-            UnitDataSO randomUnit = _listOfAllUnitData[randomNumber];
-            
-            if (_unitsCurrentlyInShop.Contains(randomUnit)) continue;
-            _unitsCurrentlyInShop.Add(randomUnit);
+
+            randomizedUnits.Add(randomUnitData);
         }
 
+        return randomizedUnits;
+    }
 
-        if (_unitsCurrentlyInShop.Count < MaxCardsAllowedInHand)
-        {
-            Debug.LogError($"Number of units selected for shop: {_unitsCurrentlyInShop.Count} is too low.");
-        }
-        return _unitsCurrentlyInShop;
+    private UnitDataSO ChooseUnitAtRandom()
+    {
+        int randomNumber = Random.Range(0, _listOfAllUnitData.Count);
+        UnitDataSO randomUnit = _listOfAllUnitData[randomNumber];
+
+        return randomUnit;
+    }
+    
+
+    public List<Card> GetCardsInHand()
+    {
+        return _listOfCardsInHand;
+    }
+
+    public void SetGridManagerReference(GridManager gridManagerReference)
+    {
+        _gridManagerReference = gridManagerReference;
+    }
+
+    private void SetCardSelected(UnitDataSO selectedCardUnitData)
+    {
+        _cardSelected = true;
+        _selectedCardUnitData = selectedCardUnitData;
     }
 }
