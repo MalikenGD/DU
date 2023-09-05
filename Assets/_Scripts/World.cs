@@ -22,6 +22,18 @@ public class World : MonoBehaviour
     private GameMode _gameMode;
     private UIManager _uiManager;
 
+    public UIManager UIManager
+    {
+        get
+        {
+            return _uiManager;
+        }
+        private set
+        {
+            _uiManager = value;
+        }
+    }
+
     private void Awake()
     {
         if (Instance == null)

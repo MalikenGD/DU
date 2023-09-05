@@ -16,24 +16,23 @@ public class Shop : MonoBehaviour
     
     private GridManager _gridManagerReference;
     private Transform _parentTransform;
-    private List<UnitDataSO> _listOfAllUnitData;
-    private List<Card> _listOfCardsInHand = new List<Card>();
+    private List<UnitDataSO> _units;
+    private List<Card> _cardsInHand = new List<Card>();
     private UnitDataSO _selectedCardUnitData;
     private bool _cardSelected = false;
     
 
     private void Start()
     {
-        _listOfAllUnitData = _shopData.GetUnitDataSOList();
-        if (_listOfAllUnitData.Count <= 1)
+        _units = _shopData.GetUnitDataSOList();
+        if (_units.Count <= 1)
         {
             Debug.LogError("List of AllUnitData is too low/empty");
-            throw new Exception();
         }
 
         InitializeCards();
         RandomizeHandOfCards();
-        CreateShopUI();
+        World.Instance.BuildUI(_shopData.GetShopUIPrefab(), this);
     }
 
     private void Update()
@@ -54,35 +53,23 @@ public class Shop : MonoBehaviour
     {
         for (int i = 0; i < MaxCardsAllowedInHand; i++)
         {
-            _listOfCardsInHand.Add(Instantiate(_shopData.GetCardPrefab(), transform).GetComponent<Card>());
-        }
-
-        RegisterToCardEvents();
-    }
-
-    private void RegisterToCardEvents()
-    {
-        foreach (Card card in _listOfCardsInHand)
-        {
+            Card card = Instantiate(_shopData.GetCardPrefab(), transform).GetComponent<Card>();
             card.OnCardSelected += SetCardSelected;
+            _cardsInHand.Add(card);
+            
         }
     }
 
-    private void CreateShopUI()
-    {
-        World.Instance.BuildUI(_shopData.GetShopUIPrefab(), this);
-    }
-    
 
     //TODO: On state updated to BuyPhase, randomize Shop for UI
     //This should subscribe to World.OnStateUpdated?
     private void RandomizeHandOfCards()
     {
-        List<UnitDataSO> listOfRandomUnits = ChooseUniqueUnitsAtRandom(_listOfCardsInHand.Count);
+        List<UnitDataSO> listOfRandomUnits = ChooseUniqueUnitsAtRandom(_cardsInHand.Count);
         
         for (int i = 0; i < MaxCardsAllowedInHand; i++)
         {
-            _listOfCardsInHand[i].SetUnitData(listOfRandomUnits[i]);
+            _cardsInHand[i].SetUnitData(listOfRandomUnits[i]);
         }
     }
 
@@ -109,8 +96,8 @@ public class Shop : MonoBehaviour
 
     private UnitDataSO ChooseUnitAtRandom()
     {
-        int randomNumber = Random.Range(0, _listOfAllUnitData.Count);
-        UnitDataSO randomUnit = _listOfAllUnitData[randomNumber];
+        int randomNumber = Random.Range(0, _units.Count);
+        UnitDataSO randomUnit = _units[randomNumber];
 
         return randomUnit;
     }
@@ -118,7 +105,7 @@ public class Shop : MonoBehaviour
 
     public List<Card> GetCardsInHand()
     {
-        return _listOfCardsInHand;
+        return _cardsInHand;
     }
 
     public void SetGridManagerReference(GridManager gridManagerReference)
