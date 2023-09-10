@@ -11,7 +11,6 @@ public class GridManager : MonoBehaviour
     
     private void Start()
     {
-        
         _grid = new Grid(gridDataSO.gridSize);
     }
     

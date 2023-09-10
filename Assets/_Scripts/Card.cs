@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Card : MonoBehaviour
 {
+    
+    //TODO: Card currently stores CardUIPrefab in drag and drop reference. 
+    //TODO: Maybe make a cardDataSO instead? Consistency's sake?
     public event Action OnUnitDataUpdated;
     public event Action<UnitDataSO> OnCardSelected;
 
