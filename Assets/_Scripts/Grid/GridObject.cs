@@ -4,14 +4,33 @@ using UnityEngine;
 
 public class GridObject
 {
-    public GridPosition _gridPosition;
-
+    private GridPosition _gridPosition;
+    private GameObject _button = null;
     private Unit _occupyingUnit;
-    
 
+
+    public GridObject(GridPosition gridPosition)
+    {
+        _gridPosition = gridPosition;
+    }
+
+    public GameObject GetAssignedButton()
+    {
+        return _button;
+    }
+
+    public void SetButton(GameObject buttonGameObject)
+    {
+        _button = buttonGameObject;
+    }
     public void SetUnit(Unit unitToSet)
     {
         _occupyingUnit = unitToSet;
+    }
+
+    public GridPosition GetGridPosition()
+    {
+        return _gridPosition;
     }
 
     public void ClearUnit()

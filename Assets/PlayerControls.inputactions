@@ -1,0 +1,51 @@
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "BaseGameplay",
+            "id": "62f490bb-7cf7-4b38-a2ac-b9c020a3768c",
+            "actions": [
+                {
+                    "name": "Drag",
+                    "type": "Value",
+                    "id": "ecac547b-de0e-483b-8daa-2bb1c84177fe",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "fa601c98-3942-4350-99dc-8aa8f237c9a0",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold(duration=5)",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Drag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard&Mouse",
+            "bindingGroup": "Keyboard&Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

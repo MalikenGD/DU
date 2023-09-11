@@ -12,11 +12,17 @@ public class Card : MonoBehaviour
     public event Action OnUnitDataUpdated;
     public event Action<UnitDataSO> OnCardSelected;
 
-    [SerializeField] private GameObject cardUIPrefab;
+    [SerializeField] private CardDataSO cardDataSO;
+    private GameObject _cardUIPrefab;
     private Transform _parentTransform;
     private UnitDataSO _unitData;
     private CardUI _cardUI;
-    
+
+    private void Start()
+    {
+        _cardUIPrefab = cardDataSO.GetCardUIPrefab();
+    }
+
 
     public Card(UnitDataSO unitData)
     {
@@ -25,7 +31,7 @@ public class Card : MonoBehaviour
 
     public CardUI CreateCardUI()
     {
-        UIBehaviour cardUIBehaviour = World.Instance.BuildUI(cardUIPrefab, this);
+        UIBehaviour cardUIBehaviour = World.Instance.BuildUI(_cardUIPrefab, this);
 
         return cardUIBehaviour as CardUI;
     }

@@ -17,8 +17,6 @@ public class CardUI : UIBehaviour
     
     private void Start()
     {
-
-        
         gameObject.transform.parent = GameObject.FindWithTag("CardUI").transform;
 
         _card = parentObjectWithDataToDisplay as Card;
@@ -58,5 +56,12 @@ public class CardUI : UIBehaviour
         UpdateUI();
     }
 
-    public void SetCardSelected() => _card.SetCardSelected();
+    //public void SetCardSelected() => _card.SetCardSelected();
+
+    public void SetCardSelected()
+    {
+        //CheckBalance
+        //if canAfford()
+        _card.SetCardSelected();
+    }
 }

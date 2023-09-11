@@ -1,17 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
 
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private GridDataSO gridDataSO;
     private Grid _grid;
-    private bool _cellSelected = false;
-    
+    private GridObject _selectedCell = null;
+
     private void Start()
     {
-        _grid = new Grid(gridDataSO.gridSize);
+        _grid = new Grid(gridDataSO.GetGridSize());
+
+        foreach (GridObject gridObject in _grid.GetGridObjectList())
+        {
+            UIBehaviour gridUIObject = World.Instance.BuildUI(gridDataSO.GetGridUIPrefab(), this);
+            gridUIObject.GetComponent<GridUI>().OnGridButtonClicked += SetCellSelected;
+        }
+
+    }
+
+    public GridObject GetGridObjectAssignment(GameObject buttonGameObject)
+    {
+        foreach (GridObject gridObject in _grid.GetGridObjectList())
+        {
+            if (gridObject.GetAssignedButton() is null)
+            {
+                gridObject.SetButton(buttonGameObject);
+                return gridObject;
+            }
+        }
+
+        Debug.LogError("GridManager:GetGridObjectAssignment: No available GridObject to be matched with a Grid Button");
+        return null;
     }
     
     public Vector3 FormatWorldPositionForGridSnapping(Vector3 dirtyWorldPosition)
@@ -56,7 +80,7 @@ public class GridManager : MonoBehaviour
     {
         foreach (var gridObject in _grid.GetGridObjectList())
         {
-            if (gridObject._gridPosition.Equals(gridPosition))
+            if (gridObject.GetGridPosition().Equals(gridPosition))
             {
                 gridObject.SetUnit(unit);
                 unit.SetGridPosition(gridPosition);
@@ -69,7 +93,7 @@ public class GridManager : MonoBehaviour
     {
         foreach (var gridObject in _grid.GetGridObjectList())
         {
-            if (gridObject._gridPosition.Equals(gridPosition))
+            if (gridObject.GetGridPosition().Equals(gridPosition))
             {
                 gridObject.ClearUnit();
             }
@@ -82,7 +106,7 @@ public class GridManager : MonoBehaviour
         
         foreach (var gridObject in _grid.GetGridObjectList())
         {
-            if (gridObject._gridPosition.Equals(gridPosition))
+            if (gridObject.GetGridPosition().Equals(gridPosition))
             {
                 return gridObject;
             }
@@ -98,7 +122,7 @@ public class GridManager : MonoBehaviour
 
         foreach (var gridObject in _grid.GetGridObjectList())
         {
-            if (gridObject._gridPosition.Equals(gridPosition))
+            if (gridObject.GetGridPosition().Equals(gridPosition))
             {
                 return gridObject;
             }
@@ -116,7 +140,7 @@ public class GridManager : MonoBehaviour
 
     public void UpdateUnitGridPosition(GridPosition gridPosition, Unit unit)
     {
-        ClearUnitAtGridPosition(unit.GetGridObject()._gridPosition);
+        ClearUnitAtGridPosition(unit.GetGridObject().GetGridPosition());
         SetUnitAtGridPosition(gridPosition, unit);
     }
 
@@ -124,26 +148,30 @@ public class GridManager : MonoBehaviour
     {
         var gridPosition = ConvertFromWorldPositionToGridPosition(worldPosition);
 
-        ClearUnitAtGridPosition(unit.GetGridObject()._gridPosition);
+        ClearUnitAtGridPosition(unit.GetGridObject().GetGridPosition());
         SetUnitAtGridPosition(gridPosition, unit);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            foreach (var gridObject in _grid.GetGridObjectList())
-            {
-                Debug.Log($"Do I have a occupying unit?: {gridObject.AmIOccupied()}");
-            }
-        }
+
+        Debug.Log("TEST");
         
     }
 
     public bool GetCellSelectedStatus()
     {
-        return _cellSelected;
+        return _selectedCell != null;
     }
+
+    public void SetCellSelected(GridObject gridObject)
+    {
+        _selectedCell = gridObject;
+        Debug.Log($"SELECTED CELL IS: {gridObject.GetGridPosition()}");
+        //TODO: Maybe fire event that the selected cell has been updated?
+    }
+    
+    
 }
 
 public class Grid
@@ -157,7 +185,7 @@ public class Grid
         {
             for (int j = 0; j < gridSize.y; j++)
             {
-                var gridObject = new GridObject {_gridPosition = new GridPosition(i,j)};
+                var gridObject = new GridObject(new GridPosition(i,j));
                 _gridObjects.Add(gridObject);
             }
         }

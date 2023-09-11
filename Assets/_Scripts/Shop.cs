@@ -19,8 +19,7 @@ public class Shop : MonoBehaviour
     private List<UnitDataSO> _units;
     private List<Card> _cardsInHand = new List<Card>();
     private UnitDataSO _selectedCardUnitData;
-    private bool _cardSelected = false;
-    
+
 
     private void Start()
     {
@@ -37,12 +36,12 @@ public class Shop : MonoBehaviour
 
     private void Update()
     {
-        if (_cardSelected)
+        if (_selectedCardUnitData is not null)
         {
             if (_gridManagerReference.GetCellSelectedStatus())
             {
                 //Instantiate(_selectedCardUnitData.GetUnitPrefab(), transform.Position, quaternion.identity);
-                _cardSelected = false;
+                _selectedCardUnitData = null;
                 //Reset selectedCell as well. But how? Event in World, or _gridManagerReference.ResetSelectedCell()?
             }
         }
@@ -115,7 +114,6 @@ public class Shop : MonoBehaviour
 
     private void SetCardSelected(UnitDataSO selectedCardUnitData)
     {
-        _cardSelected = true;
         _selectedCardUnitData = selectedCardUnitData;
     }
 }

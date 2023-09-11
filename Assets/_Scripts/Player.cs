@@ -16,4 +16,9 @@ public class Player : MonoBehaviour
         _goldBalance = _startingPlayerData.GetStartingGold();
         _remainingLives = _startingPlayerData.GetStartingLives();
     }
+
+    private void OnDrag()
+    {
+        Debug.Log("TEST");
+    }
 }
