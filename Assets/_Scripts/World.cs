@@ -42,12 +42,22 @@ public class World : MonoBehaviour
         }
         else
         {
+            Debug.LogError("World.Awake: instance not valid.");
             Destroy(gameObject);
         }
         
         _parentCanvas = Instantiate(parentCanvasPrefab);
         _uiManager = new UIManager();
-        _gameMode = Instantiate(gameModePrefab, transform).GetComponent<GameMode>();
+
+        GameObject gameModeObject = Instantiate(gameModePrefab, transform);
+        if (gameModeObject != null)
+        {
+            _gameMode = gameModeObject.GetComponent<GameMode>();
+        }
+        else
+        {
+            Debug.LogError("World.Awake: game mode not valid.");
+        }
     }
 
     private void OnEnable()
@@ -66,7 +76,6 @@ public class World : MonoBehaviour
         //Is this best? And have every other script subscribe to this?
         OnGameStateChanged?.Invoke(currentGameState);
     }
-    
 
     public Canvas GetParentCanvas()
     {

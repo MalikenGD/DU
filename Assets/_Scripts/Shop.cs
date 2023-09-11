@@ -10,24 +10,20 @@ using Random = UnityEngine.Random;
 public class Shop : MonoBehaviour
 {
     [SerializeField] private ShopDataSO _shopData;
-    
-    private const int MaxCardsAllowedInHand = 5;
-    
-    
-    private GridManager _gridManagerReference;
+    [SerializeField] private int _MaxCardsAllowedInHand = 5;
+
+    private GridManager _gridManager;
     private Transform _parentTransform;
     private List<UnitDataSO> _units;
     private List<Card> _cardsInHand = new List<Card>();
-    private UnitDataSO _selectedCardUnitData;
-    private bool _cardSelected = false;
-    
+    private UnitDataSO _selectedCardUnit;
 
     private void Start()
     {
         _units = _shopData.GetUnitDataSOList();
         if (_units.Count <= 1)
         {
-            Debug.LogError("List of AllUnitData is too low/empty");
+            Debug.LogError("Shop.Start: list of AllUnitData is too low/empty.");
         }
 
         InitializeCards();
@@ -35,39 +31,22 @@ public class Shop : MonoBehaviour
         World.Instance.BuildUI(_shopData.GetShopUIPrefab(), this);
     }
 
-    private void Update()
-    {
-        if (_cardSelected)
-        {
-            if (_gridManagerReference.GetCellSelectedStatus())
-            {
-                //Instantiate(_selectedCardUnitData.GetUnitPrefab(), transform.Position, quaternion.identity);
-                _cardSelected = false;
-                //Reset selectedCell as well. But how? Event in World, or _gridManagerReference.ResetSelectedCell()?
-            }
-        }
-    }
-
-
     private void InitializeCards()
     {
-        for (int i = 0; i < MaxCardsAllowedInHand; i++)
+        for (int i = 0; i < _MaxCardsAllowedInHand; i++)
         {
             Card card = Instantiate(_shopData.GetCardPrefab(), transform).GetComponent<Card>();
             card.OnCardSelected += SetCardSelected;
             _cardsInHand.Add(card);
-            
         }
     }
-
 
     //TODO: On state updated to BuyPhase, randomize Shop for UI
     //This should subscribe to World.OnStateUpdated?
     private void RandomizeHandOfCards()
     {
         List<UnitDataSO> listOfRandomUnits = ChooseUniqueUnitsAtRandom(_cardsInHand.Count);
-        
-        for (int i = 0; i < MaxCardsAllowedInHand; i++)
+        for (int i = 0; i < _MaxCardsAllowedInHand; i++)
         {
             _cardsInHand[i].SetUnitData(listOfRandomUnits[i]);
         }
@@ -76,7 +55,6 @@ public class Shop : MonoBehaviour
     //List will have no duplicates
     private List<UnitDataSO> ChooseUniqueUnitsAtRandom(int numberOfUnits)
     {
-        
         List<UnitDataSO> randomizedUnits = new List<UnitDataSO>();
 
         for (int i = 0; i < numberOfUnits; i++)
@@ -108,14 +86,40 @@ public class Shop : MonoBehaviour
         return _cardsInHand;
     }
 
-    public void SetGridManagerReference(GridManager gridManagerReference)
+    public void SetGridManagerReference(GridManager gridManager)
     {
-        _gridManagerReference = gridManagerReference;
+        _gridManager = gridManager;
+        _gridManager.OnCellSelected += OnCellSelected;
     }
 
-    private void SetCardSelected(UnitDataSO selectedCardUnitData)
+    private void SetCardSelected(UnitDataSO selectedCardUnit)
     {
-        _cardSelected = true;
-        _selectedCardUnitData = selectedCardUnitData;
+        _selectedCardUnit = selectedCardUnit;
+        if (_gridManager.HasSelectedCell())
+        {
+            CreateUnit(_selectedCardUnit, _gridManager.GetSelectedCell());
+            SetCardSelected(null);
+            _gridManager.SetSelectedCell(null);
+        }
+    }
+
+    private bool HasSelectedCard()
+    {
+        return _selectedCardUnit != null;
+    }
+
+    private void OnCellSelected(Cell selectedCell)
+    {
+        if (HasSelectedCard())
+        {
+            CreateUnit(_selectedCardUnit, selectedCell);
+            SetCardSelected(null);
+            _gridManager.SetSelectedCell(null);
+        }
+    }
+
+    private void CreateUnit(UnitDataSO unit, Cell cell)
+    {
+        //Instantiate(_selectedCardUnitData.GetUnitPrefab(), transform.Position, quaternion.identity
     }
 }

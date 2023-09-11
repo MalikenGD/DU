@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,17 @@ using UnityEngine.Serialization;
 
 public class GridManager : MonoBehaviour
 {
+    public event Action<Cell> OnCellSelected;
+
     [SerializeField] private GridDataSO gridDataSO;
     private Grid _grid;
-    private bool _cellSelected = false;
-    
+    private Cell _selectedCell;
+
     private void Start()
     {
-        
         _grid = new Grid(gridDataSO.gridSize);
     }
-    
+ 
     public Vector3 FormatWorldPositionForGridSnapping(Vector3 dirtyWorldPosition)
     {
         //Takes the world position from mouse or other sources and rounds it to snap with center of grid cells
@@ -25,30 +27,32 @@ public class GridManager : MonoBehaviour
         return cleanWorldPosition;
     }
 
-
-
-
     public Vector3 ConvertFromGridPositionToWorldPosition(GridPosition gridPosition)
     {
         return new Vector3(51f + gridPosition.x, 0, 21f + gridPosition.z);
     }
-    
+
     public GridPosition ConvertFromWorldPositionToGridPosition(Vector3 worldPosition)
     {
         Vector3 editedWorldPos = new Vector3();
         if (worldPosition.x % 1 < 0.5f)
         {
             editedWorldPos.x = Mathf.Floor(worldPosition.x);
-        } else editedWorldPos.x = Mathf.Ceil(worldPosition.x);
+        }
+        else
+        {
+            editedWorldPos.x = Mathf.Ceil(worldPosition.x);
+        }
 
         if (worldPosition.z % 1 < 0.5f)
         {
             editedWorldPos.z = Mathf.Floor(worldPosition.z);
         }
-        else editedWorldPos.z = Mathf.Ceil(worldPosition.z);
-        
-        
-        
+        else
+        {
+            editedWorldPos.z = Mathf.Ceil(worldPosition.z);
+        }
+
         GridPosition gridPosition = new GridPosition((int)editedWorldPos.x - 51, (int)editedWorldPos.z - 21);
         return gridPosition;
     }
@@ -138,12 +142,22 @@ public class GridManager : MonoBehaviour
                 Debug.Log($"Do I have a occupying unit?: {gridObject.AmIOccupied()}");
             }
         }
-        
     }
 
-    public bool GetCellSelectedStatus()
+    public Cell GetSelectedCell()
     {
-        return _cellSelected;
+        return _selectedCell;
+    }
+
+    public void SetSelectedCell(Cell selectedCell)
+    {
+        _selectedCell = selectedCell;
+        OnCellSelected?.Invoke(_selectedCell);
+    }
+
+    public bool HasSelectedCell()
+    {
+        return _selectedCell != null;
     }
 }
 
@@ -170,3 +184,6 @@ public class Grid
     }
 }
 
+public class Cell
+{
+}
