@@ -44,9 +44,6 @@ public class GameMode : MonoBehaviour
         }
         else
         {
-
-        }
-        {
             Debug.LogError("GameMode.Start: shop not valid.");
         }
     }
