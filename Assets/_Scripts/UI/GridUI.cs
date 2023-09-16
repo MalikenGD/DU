@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class GridUI : UIBehaviour
@@ -9,11 +10,9 @@ public class GridUI : UIBehaviour
     
     //TODO: I should probably hold a reference to the GridManager not Grid
     //TODO: This is going to be a world space UI, look into that.
-    public GridManager _gridManager;
+    private GridManager _gridManager;
     private GameObject _buttonGameObject;
     private GridObject _gridObject;
-
-    public event Action<GridObject> OnGridButtonClicked;
 
     private void Start()
     {
@@ -29,9 +28,12 @@ public class GridUI : UIBehaviour
 
     public void HandleClickLogic()
     {
-        OnGridButtonClicked?.Invoke(_gridObject);
+        _gridManager.SetGridCellSelected(_gridObject);
+    }
+
+
+    private void Update()
+    {
         
     }
-    
-
 }

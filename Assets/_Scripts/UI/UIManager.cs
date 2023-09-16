@@ -19,6 +19,18 @@ public class UIManager
         }
     }
 
+    public void ToggleUIObjectsOfType(GameObject typeOfObject)
+    {
+        // Or maybe check tag? "If has tag, hide" like GridUI tag?
+        foreach (GameObject uiGameObject in _uiGameObjects)
+        {
+            if (ReferenceEquals(uiGameObject, typeOfObject))
+            {
+                
+            }
+        }
+    }
+
     public void ToggleUIObject(GameObject uiToToggle)
     {
         if (_uiGameObjects.Contains(uiToToggle))

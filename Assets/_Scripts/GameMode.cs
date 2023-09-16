@@ -14,17 +14,19 @@ public class GameMode : MonoBehaviour
     private GridManager _gridManager;
     private Shop _shop;
     private GameState _currentGameState;
-    
 
-    
+    private void Awake()
+    {
+        _gridManager = Instantiate(gridManagerPrefab, transform).GetComponent<GridManager>();
+        _shop = Instantiate(shopPrefab, transform).GetComponent<Shop>();
+        _shop.SetGridManagerReference(_gridManager);
+    }
+
     private void Start()
     {
         ChangeState(GameState.GameStart);
         
-
-        _gridManager = Instantiate(gridManagerPrefab, transform).GetComponent<GridManager>();
-        _shop = Instantiate(shopPrefab, transform).GetComponent<Shop>();
-        _shop.SetGridManagerReference(_gridManager);
+        
     }
     private void ChangeState(GameState newGameState)
     {

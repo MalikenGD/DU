@@ -1,15 +1,15 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.Serialization;
 
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private GridDataSO gridDataSO;
     private Grid _grid;
     private GridObject _selectedCell = null;
+
+    public event Action OnGridUpdated;
+    public event Action<GridObject> OnGridCellSelected;
 
     private void Start()
     {
@@ -18,7 +18,7 @@ public class GridManager : MonoBehaviour
         foreach (GridObject gridObject in _grid.GetGridObjectList())
         {
             UIBehaviour gridUIObject = World.Instance.BuildUI(gridDataSO.GetGridUIPrefab(), this);
-            gridUIObject.GetComponent<GridUI>().OnGridButtonClicked += SetCellSelected;
+            //gridUIObject.GetComponent<GridUI>().OnGridUIButtonClicked += SetGridCellSelected;
         }
 
     }
@@ -152,26 +152,14 @@ public class GridManager : MonoBehaviour
         SetUnitAtGridPosition(gridPosition, unit);
     }
 
-    private void Update()
+    internal void SetGridCellSelected(GridObject gridObject)
     {
-
-        Debug.Log("TEST");
-        
-    }
-
-    public bool GetCellSelectedStatus()
-    {
-        return _selectedCell != null;
-    }
-
-    public void SetCellSelected(GridObject gridObject)
-    {
+        OnGridCellSelected?.Invoke(gridObject);
         _selectedCell = gridObject;
         Debug.Log($"SELECTED CELL IS: {gridObject.GetGridPosition()}");
-        //TODO: Maybe fire event that the selected cell has been updated?
     }
-    
-    
+
+
 }
 
 public class Grid

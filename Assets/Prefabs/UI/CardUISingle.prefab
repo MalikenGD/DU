@@ -441,7 +441,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6888839082431395237}
         m_TargetAssemblyTypeName: CardUI, Assembly-CSharp
-        m_MethodName: SetCardSelected
+        m_MethodName: HandleClickLogic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

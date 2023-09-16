@@ -17,6 +17,8 @@ public class Card : MonoBehaviour
     private Transform _parentTransform;
     private UnitDataSO _unitData;
     private CardUI _cardUI;
+    
+
 
     private void Start()
     {

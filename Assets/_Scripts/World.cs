@@ -18,8 +18,8 @@ public class World : MonoBehaviour
     public event Action<GameState> OnGameStateChanged;
 
     //TODO: Should I use a dictionary for only two lists? Like Dict<Faction, List<Unit>>? 
-    private List<Unit> enemyUnits;
-    private List<Unit> playerUnits;
+    private List<Unit> _enemyUnits = new List<Unit>();
+    private List<Unit> _playerUnits = new List<Unit>();
     
     //TODO: Does World or GameMode need data?
     [SerializeField] private GameObject gameModePrefab;
@@ -79,6 +79,11 @@ public class World : MonoBehaviour
             Debug.Log("toggling");
             _uiManager.ToggleAllUIObjects();
         }
+    }
+
+    public void CreatePlayerUnit(Unit unit)
+    {
+        _playerUnits.Add(unit);
     }
 
 

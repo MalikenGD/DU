@@ -16,6 +16,6 @@ MonoBehaviour:
     type: 3}
   debugIndividualCellVisual: {fileID: 8326908840152647705, guid: 455ac6bc584e91d49a4fafaba16d5037,
     type: 3}
-  gridSize: {x: 5, y: 5}
+  gridSize: {x: 7, y: 10}
   gridUIPrefab: {fileID: 5024805210979827706, guid: c7c5f2c14cad0ba488e2141423fcd15c,
     type: 3}

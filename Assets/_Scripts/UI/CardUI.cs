@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class CardUI : UIBehaviour
 {
+
     private Card _card;
     private Image _backgroundImage;
     private TextMeshProUGUI _goldCostText;
@@ -58,10 +59,15 @@ public class CardUI : UIBehaviour
 
     //public void SetCardSelected() => _card.SetCardSelected();
 
-    public void SetCardSelected()
+    public void HandleClickLogic()
     {
         //CheckBalance
         //if canAfford()
+        SetCardSelected();
+    }
+
+    private void SetCardSelected()
+    {
         _card.SetCardSelected();
     }
 }
