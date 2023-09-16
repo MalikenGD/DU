@@ -19,15 +19,12 @@ public class UIManager
         }
     }
 
-    public void ToggleUIObjectsOfType(GameObject typeOfObject)
+    public void ToggleUIObjectsOfType(object typeOfObject)
     {
+        Debug.Log("TEST");
         // Or maybe check tag? "If has tag, hide" like GridUI tag?
         foreach (GameObject uiGameObject in _uiGameObjects)
         {
-            if (ReferenceEquals(uiGameObject, typeOfObject))
-            {
-                
-            }
         }
     }
 

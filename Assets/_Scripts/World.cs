@@ -65,6 +65,7 @@ public class World : MonoBehaviour
         _gameMode.OnGameStateChanged -= GameStateChanged;
     }
 
+    public void ToggleUIObjectsOfType(GameObject prefab) => _uiManager.ToggleUIObjectsOfType(prefab);
 
     private void GameStateChanged(GameState currentGameState)
     {

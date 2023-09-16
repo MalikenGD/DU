@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [SerializeField] private GridDataSO gridDataSO;
+    [SerializeField] internal GridDataSO gridDataSO;
     private Grid _grid;
     private GridObject _selectedCell = null;
 

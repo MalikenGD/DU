@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 //using Random = UnityEngine.Random;
@@ -13,7 +14,7 @@ public class Shop : MonoBehaviour
 
     public event Action OnUnitPurchased;
     
-    [SerializeField] private ShopDataSO _shopData;
+    [SerializeField] private ShopDataSO shopData;
     
     private const int MaxCardsAllowedInHand = 5;
     
@@ -34,7 +35,7 @@ public class Shop : MonoBehaviour
     {
         _gridManagerReference.OnGridCellSelected += UpdateSelectedGridCell;
         
-        _units = _shopData.GetUnitDataSOList();
+        _units = shopData.GetUnitDataSOList();
         
         if (_units.Count <= 1)
         {
@@ -43,29 +44,34 @@ public class Shop : MonoBehaviour
 
         InitializeCards();
         RandomizeHandOfCards();
-        World.Instance.BuildUI(_shopData.GetShopUIPrefab(), this);
+        World.Instance.BuildUI(shopData.GetShopUIPrefab(), this);
     }
 
     private void Update()
     {
-        Debug.Log(_selectedCardUnitData is not null);
-        Debug.Log(_selectedGridCellObject is not null);
+
         if (_selectedCardUnitData is not null)
         {
             if (_selectedGridCellObject is not null)
             {
-                Vector3 positionToSpawnUnitAt =
-                    _gridManagerReference.ConvertFromGridPositionToWorldPosition(
-                        _selectedGridCellObject.GetGridPosition());
-                Unit newUnit =
-                    Instantiate(_selectedCardUnitData.GetUnitPrefab(), positionToSpawnUnitAt,
-                        quaternion.identity).GetComponent<Unit>();
-                World.Instance.CreatePlayerUnit(newUnit);
-                _selectedCardUnitData = null;
-                _selectedGridCellObject = null;
+                if (!_selectedGridCellObject.AmIOccupied())
+                {
+                    Vector3 positionToSpawnUnitAt =
+                        _gridManagerReference.ConvertFromGridPositionToWorldPosition(
+                            _selectedGridCellObject.GetGridPosition());
+                    Unit newUnit =
+                        Instantiate(_selectedCardUnitData.GetUnitPrefab(), positionToSpawnUnitAt,
+                            quaternion.identity).GetComponent<Unit>();
+                    
+                    _selectedGridCellObject.SetUnit(newUnit);
+                    
+                    World.Instance.CreatePlayerUnit(newUnit);
+                    _selectedCardUnitData = null;
+                    _selectedGridCellObject = null;
 
-                OnUnitPurchased?.Invoke();
-                //Reset selectedCell as well. But how? Event in World, or _gridManagerReference.ResetSelectedCell()?
+                    OnUnitPurchased?.Invoke();
+                    //Reset selectedCell as well. But how? Event in World, or _gridManagerReference.ResetSelectedCell()?
+                }
             }
         }
     }
@@ -81,7 +87,7 @@ public class Shop : MonoBehaviour
         
         for (int i = 0; i < MaxCardsAllowedInHand; i++)
         {
-            Card card = Instantiate(_shopData.GetCardPrefab(), transform).GetComponent<Card>();
+            Card card = Instantiate(shopData.GetCardPrefab(), transform).GetComponent<Card>();
             card.OnCardSelected += SetCardSelected;
             _cardsInHand.Add(card);
             
