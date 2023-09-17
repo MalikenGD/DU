@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ShopUI
+  - GridUI
+  - CardUISingle
+  - GridVisual
+  - CardUI
+  - Unit
   layers:
   - Default
   - TransparentFX
