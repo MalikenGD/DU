@@ -64,6 +64,7 @@ public class Shop : MonoBehaviour
                             quaternion.identity).GetComponent<Unit>();
                     
                     _selectedGridCellObject.SetUnit(newUnit);
+                    newUnit.SetGridObject(_selectedGridCellObject);
                     
                     World.Instance.CreatePlayerUnit(newUnit);
                     _selectedCardUnitData = null;
