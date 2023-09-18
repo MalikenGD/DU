@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,22 +25,20 @@ public class Unit : MonoBehaviour
 
     private GridObject _gridObject;
 
-    private void Start()
+    public void InitialSetup(GridObject gridObject)
     {
-        //TODO: Refactor to constructor
-        //SetGridObject(GridManager.Instance.GetGridObjectAtPosition(GetComponent<Transform>().position));
-        //_gridPosition = GridManager.Instance.ConvertFromWorldPositionToGridPosition(transform.position);
-        //GridManager.Instance.SetUnitAtGridPosition(_gridPosition, this);
+        SetGridObject(gridObject);
+        _gridPosition = _gridObject.GetGridPosition();
+        //faction?
     }
 
-
     //TODO: Implement this constructor instead of doing it on Start()
-    public Unit(Faction faction, bool isDamageable, GridPosition gridPosition)
+    /*public Unit(Faction faction, bool isDamageable, GridPosition gridPosition)
     {
         _gridPosition = gridPosition;
         _factionType = faction;
         _isDamageable = isDamageable;
-    }
+    }*/
 
 
     public GridObject GetGridObject()
@@ -49,7 +48,9 @@ public class Unit : MonoBehaviour
 
     public void SetGridObject(GridObject gridobjectToSet)
     {
+        _gridObject?.ClearUnit();
         _gridObject = gridobjectToSet;
+        _gridObject.SetUnit(this);
     }
 
     public Faction GetFaction()

@@ -49,6 +49,8 @@ public class Shop : MonoBehaviour
 
     private void Update()
     {
+        //TODO: Refactor this to be handled in the World instead.
+        //World owns Unit, so world creates/destroys unit.
 
         if (_selectedCardUnitData is not null)
         {
@@ -63,10 +65,10 @@ public class Shop : MonoBehaviour
                         Instantiate(_selectedCardUnitData.GetUnitPrefab(), positionToSpawnUnitAt,
                             quaternion.identity).GetComponent<Unit>();
                     
-                    _selectedGridCellObject.SetUnit(newUnit);
-                    newUnit.SetGridObject(_selectedGridCellObject);
+                    newUnit.InitialSetup(_selectedGridCellObject);
                     
                     World.Instance.CreatePlayerUnit(newUnit);
+                    
                     _selectedCardUnitData = null;
                     _selectedGridCellObject = null;
 
