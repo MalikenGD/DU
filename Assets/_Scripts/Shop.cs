@@ -11,35 +11,25 @@ using Random = UnityEngine.Random;
 
 public class Shop : MonoBehaviour
 {
-
-    public event Action OnUnitPurchased;
-    
     [SerializeField] private ShopDataSO shopData;
     
-    private const int MaxCardsAllowedInHand = 5;
+    [SerializeField] private int maxCardsAllowedInHand = 5;
     
     
-    private GridManager _gridManagerReference;
+    private Grid _grid;
     private Transform _parentTransform;
     private List<UnitDataSO> _units;
     private List<Card> _cardsInHand = new List<Card>();
-    private UnitDataSO _selectedCardUnitData;
-    private GridObject _selectedGridCellObject;
+    private UnitDataSO _selectedCardUnit;
 
-    private void OnDisable()
-    {
-        _gridManagerReference.OnGridCellSelected -= UpdateSelectedGridCell;
-    }
 
     private void Start()
     {
-        _gridManagerReference.OnGridCellSelected += UpdateSelectedGridCell;
-        
         _units = shopData.GetUnitDataSOList();
         
         if (_units.Count <= 1)
         {
-            Debug.LogError("List of AllUnitData is too low/empty");
+            Debug.LogError("Shop.Start: List of AllUnitData is too low/empty");
         }
 
         InitializeCards();
@@ -47,48 +37,13 @@ public class Shop : MonoBehaviour
         World.Instance.BuildUI(shopData.GetShopUIPrefab(), this);
     }
 
-    private void Update()
-    {
-        //TODO: Refactor this to be handled in the World instead.
-        //World owns Unit, so world creates/destroys unit.
-
-        if (_selectedCardUnitData is not null)
-        {
-            if (_selectedGridCellObject is not null)
-            {
-                if (!_selectedGridCellObject.AmIOccupied())
-                {
-                    Vector3 positionToSpawnUnitAt =
-                        _gridManagerReference.ConvertFromGridPositionToWorldPosition(
-                            _selectedGridCellObject.GetGridPosition());
-                    Unit newUnit =
-                        Instantiate(_selectedCardUnitData.GetUnitPrefab(), positionToSpawnUnitAt,
-                            quaternion.identity).GetComponent<Unit>();
-                    
-                    newUnit.InitialSetup(_selectedGridCellObject);
-                    
-                    World.Instance.CreatePlayerUnit(newUnit);
-                    
-                    _selectedCardUnitData = null;
-                    _selectedGridCellObject = null;
-
-                    OnUnitPurchased?.Invoke();
-                    //Reset selectedCell as well. But how? Event in World, or _gridManagerReference.ResetSelectedCell()?
-                }
-            }
-        }
-    }
-
-    private void UpdateSelectedGridCell(GridObject gridCellObject)
-    {
-        _selectedGridCellObject = gridCellObject;
-    }
+    
 
 
     private void InitializeCards()
     {
         
-        for (int i = 0; i < MaxCardsAllowedInHand; i++)
+        for (int i = 0; i < maxCardsAllowedInHand; i++)
         {
             Card card = Instantiate(shopData.GetCardPrefab(), transform).GetComponent<Card>();
             card.OnCardSelected += SetCardSelected;
@@ -104,7 +59,7 @@ public class Shop : MonoBehaviour
     {
         List<UnitDataSO> listOfRandomUnits = ChooseUniqueUnitsAtRandom(_cardsInHand.Count);
         
-        for (int i = 0; i < MaxCardsAllowedInHand; i++)
+        for (int i = 0; i < maxCardsAllowedInHand; i++)
         {
             _cardsInHand[i].SetUnitData(listOfRandomUnits[i]);
         }
@@ -145,13 +100,36 @@ public class Shop : MonoBehaviour
         return _cardsInHand;
     }
 
-    public void SetGridManagerReference(GridManager gridManagerReference)
+    public void SetGridReference(Grid gridReference)
     {
-        _gridManagerReference = gridManagerReference;
+        this._grid = gridReference;
     }
 
     private void SetCardSelected(UnitDataSO selectedCardUnitData)
     {
-        _selectedCardUnitData = selectedCardUnitData;
+        _selectedCardUnit = selectedCardUnitData;
+
+        if (_grid.HasSelectedCell())
+        {
+            CreateUnit(_grid.GetSelectedCell());
+            _grid.SetSelectedCell(null);
+            _selectedCardUnit = null;
+        }
+    }
+
+    private void CreateUnit(Cell cell)
+    {
+        //TODO: Refactor into Factory
+        Vector3 positionToSpawnUnitAt =
+            _grid.ConvertFromGridPositionToWorldPosition(cell.GetGridPosition());
+        
+        Unit newUnit =
+            Instantiate(_selectedCardUnit.GetUnitPrefab(), positionToSpawnUnitAt,
+                quaternion.identity).GetComponent<Unit>();
+        
+        newUnit.InitialSetup(cell);
+                    
+        //TODO: Refactor into Factory
+        World.Instance.CreatePlayerUnit(newUnit);
     }
 }

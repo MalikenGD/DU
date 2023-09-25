@@ -52,7 +52,16 @@ public class World : MonoBehaviour
         _screenSpaceParentCanvas = Instantiate(screenSpaceParentCanvasPrefab);
         _worldSpaceParentCanvas = Instantiate(worldSpaceParentCanvasPrefab);
         _uiManager = new UIManager();
-        _gameMode = Instantiate(gameModePrefab, transform).GetComponent<GameMode>();
+        
+        GameObject gameModeObject = Instantiate(gameModePrefab, transform);
+        if (gameModeObject != null)
+        {
+            _gameMode = gameModeObject.GetComponent<GameMode>();
+        }
+        else
+        {
+            Debug.LogError("World.Awake: GameMode not valid.");
+        }
     }
 
     private void OnEnable()
@@ -64,8 +73,6 @@ public class World : MonoBehaviour
     {
         _gameMode.OnGameStateChanged -= GameStateChanged;
     }
-
-    public void ToggleUIObjectsOfType(GameObject prefab) => _uiManager.ToggleUIObjectsOfType(prefab);
 
     private void GameStateChanged(GameState currentGameState)
     {

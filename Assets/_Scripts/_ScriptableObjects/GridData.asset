@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9e156e898f103c4492b49403361009b, type: 3}
   m_Name: GridData
   m_EditorClassIdentifier: 
+  cellDataSO: {fileID: 11400000, guid: 735bc80c7d809ec49af851de36c6213f, type: 2}
   gridPlaneVisual: {fileID: 8161930489799170106, guid: 9742fcd08aefbe147842be2e2bca1bf2,
     type: 3}
   debugIndividualCellVisual: {fileID: 8326908840152647705, guid: 455ac6bc584e91d49a4fafaba16d5037,
     type: 3}
   gridSize: {x: 7, y: 10}
-  gridUIPrefab: {fileID: 5024805210979827706, guid: c7c5f2c14cad0ba488e2141423fcd15c,
+  gridUIPrefab: {fileID: 5743883519102289117, guid: eb68a7a100f16c8439ab9665e4fc9654,
     type: 3}

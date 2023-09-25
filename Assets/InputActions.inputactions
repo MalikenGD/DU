@@ -1,5 +1,5 @@
 {
-    "name": "DefaultInputActions",
+    "name": "InputActions",
     "maps": [
         {
             "name": "Player",
@@ -38,7 +38,7 @@
                     "id": "9066509a-a955-4515-81e3-276f4a9233a2",
                     "expectedControlType": "Delta",
                     "processors": "",
-                    "interactions": "Hold(duration=0.1,pressPoint=0.4)",
+                    "interactions": "Hold(duration=0.05,pressPoint=0.4)",
                     "initialStateCheck": true
                 }
             ],

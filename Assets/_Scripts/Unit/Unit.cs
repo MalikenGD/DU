@@ -13,49 +13,32 @@ public class Unit : MonoBehaviour
     public GridPosition _gridPosition;
     private bool _isDamageable = true;
 
-    public enum Faction
-    {
-        Friendly,
-        Enemy
-    }
-
-    private Faction _factionType;
-
     private Unit _target;
 
-    private GridObject _gridObject;
+    private Cell cell;
 
-    public void InitialSetup(GridObject gridObject)
+    public void InitialSetup(Cell cell)
     {
-        SetGridObject(gridObject);
-        _gridPosition = _gridObject.GetGridPosition();
+        SetCurrentCell(cell);
+        _gridPosition = this.cell.GetGridPosition();
         //faction?
     }
-
-    //TODO: Implement this constructor instead of doing it on Start()
-    /*public Unit(Faction faction, bool isDamageable, GridPosition gridPosition)
+    
+    public Cell GetCell()
     {
-        _gridPosition = gridPosition;
-        _factionType = faction;
-        _isDamageable = isDamageable;
-    }*/
-
-
-    public GridObject GetGridObject()
-    {
-        return _gridObject;
+        return cell;
     }
 
-    public void SetGridObject(GridObject gridobjectToSet)
+    public void SetCurrentCell(Cell newCell)
     {
-        _gridObject?.ClearUnit();
-        _gridObject = gridobjectToSet;
-        _gridObject.SetUnit(this);
+        cell?.ClearUnit();
+        cell = newCell;
+        cell.SetUnit(this);
     }
 
-    public Faction GetFaction()
+    public void UpdateWorldPosition(Vector3 newWorldPosition)
     {
-        return _factionType;
+        transform.position = newWorldPosition;
     }
 
     public void SetGridPosition(GridPosition gridPosition)

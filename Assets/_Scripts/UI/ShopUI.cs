@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ShopUI : UIBehaviour
 {
-    private GameObject _uiGameObject;
+
     private Shop _shop;
     private List<Card> _cardsInHand;
     private List<CardUI> _cardUIs = new List<CardUI>();
@@ -26,11 +26,6 @@ public class ShopUI : UIBehaviour
             CardUI cardUI = card.CreateCardUI();
             _cardUIs.Add(cardUI);
         }
-    }
-
-    public GameObject GetUIGameObject()
-    {
-        return _uiGameObject;
     }
     
 }

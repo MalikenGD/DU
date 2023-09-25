@@ -2,27 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridObject
+public class Cell
 {
     private GridPosition _gridPosition;
-    private GameObject _button = null;
+    private GameObject _cellUIPrefab;
     private Unit _occupyingUnit;
 
 
-    public GridObject(GridPosition gridPosition)
+    public Cell(GridPosition gridPosition, GameObject cellUIPrefab)
     {
         _gridPosition = gridPosition;
+        _cellUIPrefab = cellUIPrefab;
     }
-
-    public GameObject GetAssignedButton()
-    {
-        return _button;
-    }
-
-    public void SetButton(GameObject buttonGameObject)
-    {
-        _button = buttonGameObject;
-    }
+    
+    
     public void SetUnit(Unit unitToSet)
     {
         _occupyingUnit = unitToSet;
@@ -42,9 +35,13 @@ public class GridObject
     {
         return _occupyingUnit;
     }
-
-    public bool AmIOccupied()
+    
+    public CellUI CreateCellUI(Vector3 worldPosition)
     {
-        return _occupyingUnit != null;
+        UIBehaviour cellUIBehaviour = World.Instance.BuildUI(_cellUIPrefab, this);
+        CellUI cellUI = cellUIBehaviour as CellUI;
+        cellUI.Initialize(worldPosition);
+
+        return cellUI;
     }
 }

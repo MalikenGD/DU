@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f6d79152edbae4ca49531533601f5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridManagerPrefab: {fileID: 776463347070556647, guid: 348447bbcb3c89e4e8e3d3722937fc41,
+  gridPrefab: {fileID: 776463347070556647, guid: 348447bbcb3c89e4e8e3d3722937fc41,
     type: 3}
   shopPrefab: {fileID: 1467413358742503626, guid: 5eb274922974cb34f92977358cfb1d5e,
     type: 3}
