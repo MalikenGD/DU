@@ -92,6 +92,11 @@ public class GridUI : UIBehaviour
             cellUI.SetNewState(UIState.Disabled);
         }
         
+        //TODO:
+        //This code isn't UI Code and likely belongs in the Grid class instead.
+        //To keep this MVC a refactor will be required. 
+        //Time constraints. No unit logic should be here.
+        
         if (_unitBeingDragged is not null)
         {
             
@@ -108,8 +113,8 @@ public class GridUI : UIBehaviour
             _unitBeingDragged = null;
         }
         
-        //TODO: Swap units if dragged ontop of another unit
-        //TODO: Add VFX on unit drag finished. But how?
+        //Swap units if dragged ontop of another unit
+        //Add VFX on unit drag finished. But how?
     }
 
     private void HandleDragging(Unit unitBeingDragged)
