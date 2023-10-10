@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CardUI : UIBehaviour
 {
 
     private Card _card;
-    private Image _backgroundImage;
-    private TextMeshProUGUI _goldCostText;
-    private TextMeshProUGUI _unitNameText;
+    [SerializeField] private Image backgroundImage;
+    [SerializeField] private TextMeshProUGUI goldCostText;
+    [SerializeField] private TextMeshProUGUI unitNameText;
     private UnitDataSO _currentUnitDataToDisplay;
     
     
@@ -26,30 +27,28 @@ public class CardUI : UIBehaviour
         _currentUnitDataToDisplay = _card.GetUnitData();
         _card.OnUnitDataUpdated += UpdateUI;
         //TODO: Handle card/cardUI deletion and unsubscribe from Card event?
-
         
-        InitializeCardUISettings();
         UpdateUI();
-    }
-
-    private void InitializeCardUISettings()
-    {
-        _backgroundImage = GetComponentInChildren<Image>();
-        _goldCostText = gameObject.transform.Find("GoldText").GetComponent<TextMeshProUGUI>();
-        _unitNameText = gameObject.transform.Find("NameText").GetComponent<TextMeshProUGUI>();
-    }
-
-    public GameObject GetUIGameObject()
-    {
-        return gameObject;
     }
 
     private void UpdateUI()
     {
         _currentUnitDataToDisplay = _card.GetUnitData();
-        _backgroundImage.sprite = _currentUnitDataToDisplay.GetUnitSpriteForShopBackground();
-        _goldCostText.text = _currentUnitDataToDisplay.GetUnitGoldCost().ToString();
-        _unitNameText.text = _currentUnitDataToDisplay.GetUnitName();
+
+        if (backgroundImage != null)
+        {
+            backgroundImage.sprite = _currentUnitDataToDisplay.GetUnitSpriteForShopBackground();
+        }
+        
+        if (goldCostText.text != null)
+        {
+            goldCostText.text = _currentUnitDataToDisplay.GetUnitGoldCost().ToString();
+        }
+        
+        if (unitNameText.text != null)
+        {
+            unitNameText.text = _currentUnitDataToDisplay.GetUnitName();
+        }
     }
 
     private void Update()

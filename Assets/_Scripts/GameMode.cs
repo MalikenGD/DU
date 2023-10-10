@@ -42,13 +42,12 @@ public class GameMode : MonoBehaviour
         if (shopObject is not null)
         {
             _shop = shopObject.GetComponent<Shop>();
+            _shop.SetGridReference(_grid);
         }
         else
         {
             Debug.LogError("GameMode.Start: Shop not valid");
         }
-        
-        _shop.SetGridReference(_grid);
     }
 
     private void Start()

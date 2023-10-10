@@ -25,8 +25,9 @@ public class World : MonoBehaviour
     [SerializeField] private GameObject gameModePrefab;
     private GameMode _gameMode;
     private UIManager _uiManager;
+    private UnitFactory _unitFactory;
 
-    public UIManager UIManager
+    public UIManager uiManager
     {
         get
         {
@@ -35,6 +36,18 @@ public class World : MonoBehaviour
         private set
         {
             _uiManager = value;
+        }
+    }
+    
+    public UnitFactory unitFactory
+    {
+        get
+        {
+            return _unitFactory;
+        }
+        private set
+        {
+            _unitFactory = value;
         }
     }
 
@@ -52,6 +65,7 @@ public class World : MonoBehaviour
         _screenSpaceParentCanvas = Instantiate(screenSpaceParentCanvasPrefab);
         _worldSpaceParentCanvas = Instantiate(worldSpaceParentCanvasPrefab);
         _uiManager = new UIManager();
+        _unitFactory = new UnitFactory();
         
         GameObject gameModeObject = Instantiate(gameModePrefab, transform);
         if (gameModeObject != null)
@@ -89,12 +103,6 @@ public class World : MonoBehaviour
         }
     }
 
-    public void CreatePlayerUnit(Unit unit)
-    {
-        _playerUnits.Add(unit);
-    }
-
-
     public Canvas GetScreenSpaceCanvas()
     {
         return _screenSpaceParentCanvas;
@@ -108,6 +116,33 @@ public class World : MonoBehaviour
     public UIBehaviour BuildUI(GameObject uiPrefab, object builder)
     {
         return _uiManager.BuildUI(uiPrefab, builder);
+    }
+
+    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, int faction)
+    {
+        //faction 0 = enemy unit, faction 1 = player unit
+        Unit unit = _unitFactory.BuildUnit(unitPrefab, spawningPosition, gameObject.transform);
+
+        if (unit == null)
+        {
+            Debug.LogError("World.BuildUnit: Unit created is null.");
+            return null;
+        }
+        
+        if (faction == 0)
+        {
+            _enemyUnits.Add(unit);
+        }
+        else if (faction == 1)
+        {
+            _playerUnits.Add(unit);
+        }
+        else
+        {
+            Debug.LogError("World.BuildUnit: Faction selection out of range.");
+        }
+
+        return unit;
     }
 }
 

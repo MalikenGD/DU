@@ -70,10 +70,11 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
 
     public void OnDrag(PointerEventData eventData)
     {
-
         if (_cell.GetUnit() is not null)
         {
+            
             GameObject unitToDrag = _cell.GetUnit().gameObject;
+            Debug.Log(unitToDrag);
 
             Vector3 unitPosition = unitToDrag.transform.position;
 
@@ -91,14 +92,12 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
     
     protected override void UpdateWhenHighlighted()
     {
-        //Debug.Log("Highlighted");
         _cellUIImage.color = _defaultCellUIImageColor;
         _cellUIImage.enabled = true;
     }
 
     protected override void UpdateWhenSelected()
     {
-        //Debug.Log("Selected");
         _cellUIImage.color = highlightedColor;
         _cellUIImage.enabled = true;
         
@@ -106,7 +105,6 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
     
     protected override void UpdateWhenGreyedOut()
     {
-        //Debug.Log("GreyedOut");
         _cellUIImage.color = Color.gray;
         _cellUIImage.enabled = true;
         
@@ -114,14 +112,13 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
     
     protected override void UpdateWhenDisabled()
     {
-        //Debug.Log("Disabled");
         _cellUIImage.enabled = false;
     }
 
     protected override void Update()
     {
         base.Update();
-        Debug.Log($"My state is: {currentState}");
+        //Debug.Log($"My state is: {currentState}");
         
     }
     

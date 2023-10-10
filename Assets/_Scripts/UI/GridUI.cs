@@ -35,7 +35,7 @@ public class GridUI : UIBehaviour
         {
             //TODO: Unsubscribe from CellUI events. Perhaps on CellUI destruction?
             
-            
+            //TODO: Decouple gameplay naming from UI logic. Click, Drag, All fine. Unit/Cell not so much.
             Vector3 newWorldPosition = _grid.ConvertFromGridPositionToWorldPosition(cell.GetGridPosition());
             CellUI cellUI = cell.CreateCellUI(newWorldPosition);
             cellUI.transform.parent = gameObject.transform;

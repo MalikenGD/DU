@@ -15,25 +15,25 @@ public class Unit : MonoBehaviour
 
     private Unit _target;
 
-    private Cell cell;
+    private Cell _cell;
 
     public void InitialSetup(Cell cell)
     {
         SetCurrentCell(cell);
-        _gridPosition = this.cell.GetGridPosition();
+        _gridPosition = _cell.GetGridPosition();
         //faction?
     }
     
     public Cell GetCell()
     {
-        return cell;
+        return _cell;
     }
 
     public void SetCurrentCell(Cell newCell)
     {
-        cell?.ClearUnit();
-        cell = newCell;
-        cell.SetUnit(this);
+        _cell?.ClearUnit();
+        _cell = newCell;
+        _cell.SetUnit(this);
     }
 
     public void UpdateWorldPosition(Vector3 newWorldPosition)

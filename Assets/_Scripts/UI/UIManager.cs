@@ -12,7 +12,7 @@ public class UIManager
 
     public void ToggleAllUIObjects()
     {
-        foreach (var uiObject in _uiGameObjects)
+        foreach (GameObject uiObject in _uiGameObjects)
         {
             bool uiObjectActiveStatus = uiObject.activeSelf;
             uiObject.SetActive(!uiObjectActiveStatus);
@@ -50,7 +50,7 @@ public class UIManager
 
         if (uiBehaviour == null)
         {
-            Debug.LogError("Built UI Object that has no UIBehaviour");
+            Debug.LogError("UIManager.BuildUI: Built UI Object that has no UIBehaviour");
             return null;
         }
 
@@ -58,7 +58,7 @@ public class UIManager
         uiBehaviour.SetParentObjectWithDataToDisplay(builder);
 
         StoreUIGameObjects(uiGameObject);
-        return uiGameObject.GetComponent<UIBehaviour>();
+        return uiBehaviour;
     }
     
     

@@ -185,6 +185,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5df84461f09b80d4992eb848019efc2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundImage: {fileID: 7244846676623518221}
+  goldCostText: {fileID: 123135663462391989}
+  unitNameText: {fileID: 7785672431047546794}
 --- !u!1 &6561247509939229550
 GameObject:
   m_ObjectHideFlags: 0

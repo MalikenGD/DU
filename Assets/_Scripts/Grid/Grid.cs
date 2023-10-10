@@ -13,15 +13,18 @@ public class Grid : MonoBehaviour
 
     private void Start()
     {
-        _cells = new List<Cell>();
-        for (int i = 0; i < gridDataSO.GetGridSize().x; i++)
+        Vector2 gridSize = gridDataSO.GetGridSize();
+        GameObject cellPrefab = gridDataSO.GetCellDataSO().GetCellUIPrefab();
+
+        for (int i = 0; i < gridSize.x; i++)
         {
-            for (int j = 0; j < gridDataSO.GetGridSize().y; j++)
+            for (int j = 0; j < gridSize.y; j++)
             {
-                Cell cell = new Cell(new GridPosition(i,j), gridDataSO.GetCellDataSO().GetCellUIPrefab());
+                Cell cell = new Cell(new GridPosition(i, j), cellPrefab);
                 _cells.Add(cell);
             }
         }
+
 
         CreateGridUI();
     }
@@ -92,6 +95,26 @@ public class Grid : MonoBehaviour
                 unit.SetCurrentCell(cell);
             }
         }
+    }
+    
+    public void SetUnitAtSelectedCell(Unit unit)
+    {
+        if (_selectedCell == null)
+        {
+            Debug.LogError("Grid.SetUnitAtGridPosition(unit): Attempting to set unit at null selected cell.");
+        }
+
+        if (unit == null)
+        {
+            Debug.LogError("Grid.SetUnitAtGridPosition(unit): Attempting to set null unit at selected cell.");
+        }
+
+        _selectedCell.ClearUnit();
+        _selectedCell.SetUnit(unit);
+        unit.InitialSetup(_selectedCell); //TODO: Stop unit from setting it's own position, and move it here instead.
+                                          //This will break CellUI. 
+        _selectedCell = null;
+
     }
 
     private void ClearUnitAtGridPosition(GridPosition gridPosition)

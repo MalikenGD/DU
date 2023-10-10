@@ -42,10 +42,27 @@ public class Shop : MonoBehaviour
 
     private void InitializeCards()
     {
-        
+        GameObject cardPrefab = shopData.GetCardPrefab();
         for (int i = 0; i < maxCardsAllowedInHand; i++)
         {
-            Card card = Instantiate(shopData.GetCardPrefab(), transform).GetComponent<Card>();
+            GameObject cardObject = Instantiate(cardPrefab, transform);
+            bool isCardObjectValid = cardObject != null;
+            Card card = isCardObjectValid ? cardObject.GetComponent<Card>() : null;
+            bool isCardValid = card != null;
+
+            if (!isCardValid)
+            {
+                if (!isCardObjectValid)
+                {
+                    Debug.LogError("Shop.InitializeCards: Card GameObject is not valid.");
+                }
+
+                if (!isCardValid)
+                {
+                    Debug.LogError("Shop.InitializeCards: Card is not valid.");
+                }
+                continue;
+            }
             card.OnCardSelected += SetCardSelected;
             _cardsInHand.Add(card);
             
@@ -111,25 +128,22 @@ public class Shop : MonoBehaviour
 
         if (_grid.HasSelectedCell())
         {
-            CreateUnit(_grid.GetSelectedCell());
-            _grid.SetSelectedCell(null);
+            CreateUnit();
+            //_grid.SetSelectedCell(null); TODO: DO THIS 
             _selectedCardUnit = null;
         }
     }
 
-    private void CreateUnit(Cell cell)
+    private void CreateUnit()
     {
         //TODO: Refactor into Factory
-        Vector3 positionToSpawnUnitAt =
-            _grid.ConvertFromGridPositionToWorldPosition(cell.GetGridPosition());
+        GameObject unitPrefab = _selectedCardUnit.GetUnitPrefab();
+        GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
+        Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
+
+        //Faction 0 = enemy unit, Faction 1 = player unit
+        Unit newUnit = World.Instance.BuildUnit(unitPrefab, spawningPosition,1);
         
-        Unit newUnit =
-            Instantiate(_selectedCardUnit.GetUnitPrefab(), positionToSpawnUnitAt,
-                quaternion.identity).GetComponent<Unit>();
-        
-        newUnit.InitialSetup(cell);
-                    
-        //TODO: Refactor into Factory
-        World.Instance.CreatePlayerUnit(newUnit);
+        _grid.SetUnitAtSelectedCell(newUnit);
     }
 }
