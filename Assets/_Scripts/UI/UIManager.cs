@@ -50,7 +50,7 @@ public class UIManager
 
         if (uiBehaviour == null)
         {
-            Debug.LogError("UIManager.BuildUI: Built UI Object that has no UIBehaviour");
+            Debug.LogError("UIManager.BuildUI: Built UI Object that has no UIBehaviour.");
             return null;
         }
 

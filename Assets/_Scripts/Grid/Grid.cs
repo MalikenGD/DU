@@ -114,7 +114,6 @@ public class Grid : MonoBehaviour
         unit.InitialSetup(_selectedCell); //TODO: Stop unit from setting it's own position, and move it here instead.
                                           //This will break CellUI. 
         _selectedCell = null;
-
     }
 
     private void ClearUnitAtGridPosition(GridPosition gridPosition)

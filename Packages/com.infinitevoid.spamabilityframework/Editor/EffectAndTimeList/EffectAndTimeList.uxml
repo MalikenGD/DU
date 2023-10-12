@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:editor="UnityEditor.UIElements"
+        xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+    <engine:Box name="effect-list-wrapper">
+        <engine:Box name="effect-time-header" class="c-effect-list-header c-list-header">
+            <engine:Label style="width: 230px; margin-left: 30px;"/>
+            <engine:Label text="Time" style="margin-left: 50px;" tooltip="The time it takes for the effect to be applied. Adds a delay between this and the next effect in the list."/>
+            <engine:Label text="On caster" style="margin-left: 15px;" tooltip="Should the effect be applied to the caster instead of the target?"/>
+            <engine:Label text="Name/Description" style="margin-left: 8px;"/>
+        </engine:Box>
+        <engine:Box name="conditional-effects-header" class="c-effect-list-header c-list-header">
+            <engine:Label style="width: 265px; margin-left: 30px;"/>
+            <engine:Label text="On caster" style="margin-left: 15px;" tooltip="Should the effect be applied to the caster instead of the target?"/>
+            <engine:Label text="Name/Description" style="margin-left: 8px;"/>
+        </engine:Box>
+        <engine:Box name="condition-effects-header" class="c-effect-list-header c-list-header">
+            <engine:Label style="width: 265px; margin-left: 30px;"/>
+            <engine:Label text="Event" style="margin-left: 15px;" tooltip="On which events should the effect be applied?"/>
+            <engine:Label text="Description" style="margin-left: 50px;"/>
+        </engine:Box>
+
+        <engine:ListView name="effect-list-view" class="c-effects-list-view" item-height="30"/>
+    </engine:Box>
+    <engine:Box name="effect-controls-row" class="c-effects-box__button-row">
+        <engine:Button text="Add effect" name="add-effect-button"/>
+        <engine:Button text="Create new effect" name="create-effect-button" class="c-button--blue"/>
+    </engine:Box>
+</engine:UXML>

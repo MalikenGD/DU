@@ -1,0 +1,68 @@
+TemplateContainer {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+#effect-type-name {
+    margin-top: 10px;
+    -unity-font-style: bold;
+}
+#effect-desc {
+    -unity-font-style: italic;
+}
+
+#effect-settings {
+    margin-top: 10px;
+    background-color: #303030;
+}
+PropertyField.c-effect-description {
+    margin-bottom: 5px;
+    height: auto;
+}
+
+PropertyField.u-wide-label > Label {
+    min-width: 170px;
+}
+
+PropertyField.u-auto-height {
+    height: auto;
+}
+
+.c-reference-with-edit {
+    flex-direction: row;
+}
+
+.c-reference-with-edit PropertyField {
+    flex-grow: 1;
+}
+
+.c-reference-with-edit Button {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.c-new-effect-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.c-new-effect-grid__button {
+    margin-top: auto;
+    width: 100%;
+    align-self: center;
+}
+
+.c-new-effect-grid__description {
+    margin-bottom: 10px;
+    -unity-text-align: upper-center;
+}
+
+.c-new-effect-grid__item {
+    margin-right: 1%;
+    min-width: 24%;
+    max-width: 32%;
+}
+.c-new-effect-grid__item .c-box__header {
+    align-items: center;
+    width: 100%;
+}

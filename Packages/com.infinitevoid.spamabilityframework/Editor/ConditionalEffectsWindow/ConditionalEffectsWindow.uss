@@ -1,0 +1,16 @@
+TemplateContainer {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+PropertyField.u-wide-label > Label {
+    min-width: 170px;
+}
+
+PropertyField.u-auto-height {
+    height: auto;
+}
+
+#conditional-effect-desc {
+    white-space: normal;
+}
