@@ -20,14 +20,15 @@ public class World : MonoBehaviour
     //TODO: Should I use a dictionary for only two lists? Like Dict<Faction, List<Unit>>? 
     private List<Unit> _enemyUnits = new List<Unit>();
     private List<Unit> _playerUnits = new List<Unit>();
-    
-    //TODO: Does World or GameMode need data?
+
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject gameModePrefab;
     private GameMode _gameMode;
+    private Player _player;
     private UIManager _uiManager;
     private UnitFactory _unitFactory;
 
-    public UIManager uiManager
+    /*public UIManager uiManager
     {
         get
         {
@@ -49,7 +50,7 @@ public class World : MonoBehaviour
         {
             _unitFactory = value;
         }
-    }
+    }*/
 
     private void Awake()
     {
@@ -67,7 +68,7 @@ public class World : MonoBehaviour
         _uiManager = new UIManager();
         _unitFactory = new UnitFactory();
         
-        GameObject gameModeObject = Instantiate(gameModePrefab, transform);
+        GameObject gameModeObject = Instantiate(gameModePrefab);
         if (gameModeObject != null)
         {
             _gameMode = gameModeObject.GetComponent<GameMode>();
@@ -75,6 +76,16 @@ public class World : MonoBehaviour
         else
         {
             Debug.LogError("World.Awake: GameMode not valid.");
+        }
+        
+        GameObject playerGameObject = Instantiate(playerPrefab);
+        if (playerGameObject != null)
+        {
+            _player = playerGameObject.GetComponent<Player>();
+        }
+        else
+        {
+            Debug.LogError("World.Awake: Player not valid.");
         }
     }
 
