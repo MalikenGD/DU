@@ -17,6 +17,7 @@ public class Shop : MonoBehaviour
     
     
     private Grid _grid;
+    private Player _player;
     private Transform _parentTransform;
     private List<UnitDataSO> _units;
     private List<Card> _cardsInHand = new List<Card>();
@@ -119,7 +120,7 @@ public class Shop : MonoBehaviour
 
     public void SetGridReference(Grid gridReference)
     {
-        this._grid = gridReference;
+        _grid = gridReference;
     }
 
     private void SetCardSelected(UnitDataSO selectedCardUnitData)
@@ -136,7 +137,6 @@ public class Shop : MonoBehaviour
 
     private void CreateUnit()
     {
-        //TODO: Refactor into Factory
         GameObject unitPrefab = _selectedCardUnit.GetUnitPrefab();
         GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
         Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
@@ -145,5 +145,10 @@ public class Shop : MonoBehaviour
         Unit newUnit = World.Instance.BuildUnit(unitPrefab, spawningPosition,1);
         
         _grid.SetUnitAtSelectedCell(newUnit);
+    }
+
+    public void SetPlayerReference(Player player)
+    {
+        _player = player;
     }
 }

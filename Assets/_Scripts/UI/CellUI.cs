@@ -14,11 +14,12 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
     [SerializeField] private Color highlightedColor;
     
 
-    public event Action<Cell, CellUI> OnCellClicked;
-    public event Action<Unit> OnUnitDragging;
-    public event Action OnUnitDragged;
-    public event Action<Cell, CellUI> OnCellMouseOver;
-    public event Action<Cell, CellUI> OnCellMouseExit;
+    public event Action<Cell, CellUI> OnMouseClick;
+    public event Action<object> OnBeginDragging;
+    public event Action OnDragging;
+    public event Action OnEndDragging;
+    public event Action<Cell, CellUI> OnPointerEntering;
+    public event Action<Cell, CellUI> OnPointerExiting;
 
     private void Start()
     {
@@ -40,49 +41,45 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
 
     public void HandleClickLogic()
     {
-        OnCellClicked?.Invoke(_cell, this);
+        OnMouseClick?.Invoke(_cell, this);
     }
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        OnCellMouseOver?.Invoke(_cell, this);
+        OnPointerEntering?.Invoke(_cell, this);
     }
     
     public void OnPointerExit(PointerEventData eventData)
     {
-        OnCellMouseExit?.Invoke(_cell, this);
+        OnPointerExiting?.Invoke(_cell, this);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //Maybe change material of _cell.GetUnit() to be transparent?
-        OnUnitDragging?.Invoke(_cell.GetUnit());
+        if (_cell.GetUnit() == null)
+        {
+            Debug.LogError("CellUI.OnBeginDrag: Trying to drag Null object.");
+            return;
+        }
+        
+        OnBeginDragging?.Invoke(_cell);
     }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-
-        //Maybe change material of _cell.GetUnit() to be opaque again?
-        OnUnitDragged?.Invoke();
-    }
-
-    
-
     public void OnDrag(PointerEventData eventData)
     {
-        if (_cell.GetUnit() is not null)
+        //Debug.Log(eventData.selectedObject.GetComponent<Unit>());
+        if (_cell.GetUnit() == null)
         {
-            
-            GameObject unitToDrag = _cell.GetUnit().gameObject;
-            Debug.Log(unitToDrag);
-
-            Vector3 unitPosition = unitToDrag.transform.position;
-
-            RaycastHit hit;
-
-            Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit);
-            unitToDrag.transform.position = new Vector3(hit.point.x, unitToDrag.transform.position.y, hit.point.z);
+            Debug.LogError("CellUI.OnDrag: Trying to drag Null object.");
+            return;
         }
+        
+        OnDragging?.Invoke();
+    }
+    
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        //TODO: Change material back from Transparent.
+        OnEndDragging?.Invoke();
     }
 
     protected override void UpdateWhenInteractable()
@@ -120,6 +117,15 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
         base.Update();
         //Debug.Log($"My state is: {currentState}");
         
+        
+        
+        
+        //TODO: Delete debug code.
+        if (_cell.GetUnit() != null)
+        {
+            _cellUIImage.enabled = true;
+            _cellUIImage.color = Color.magenta;
+        }
     }
     
 }

@@ -13,7 +13,7 @@ public class GridUI : UIBehaviour
 
     private CellUI _selectedCellUI;
     private Cell _highlightedCell;
-    private Unit _unitBeingDragged;
+    private object _objectBeingDragged;
     
 
     private void Start()
@@ -39,22 +39,26 @@ public class GridUI : UIBehaviour
             Vector3 newWorldPosition = _grid.ConvertFromGridPositionToWorldPosition(cell.GetGridPosition());
             CellUI cellUI = cell.CreateCellUI(newWorldPosition);
             cellUI.transform.parent = gameObject.transform;
-            cellUI.OnCellClicked += HandleClick;
-            cellUI.OnUnitDragged += HandleDragFinished;
-            cellUI.OnUnitDragging += HandleDragging;
-            cellUI.OnCellMouseOver += HandleMouseOver;
-            cellUI.OnCellMouseExit += HandleMouseExit;
+            cellUI.OnMouseClick += HandleMouseClick;
+            cellUI.OnEndDragging += HandleEndDrag;
+            cellUI.OnBeginDragging += HandleBeginDragging;
+            cellUI.OnPointerEntering += HandlePointerEntering;
+            cellUI.OnPointerExiting += HandlePointerExiting;
+            cellUI.OnDragging += HandleDragging;
             
             _cellUIs.Add(cellUI);
         }
         
     }
 
-    private void HandleClick(Cell cell, CellUI cellUI)
+    private void HandleMouseClick(Cell cell, CellUI cellUI)
     {
         //Debug.Log($"Cell clicked at {cell.GetGridPosition()}");
-        
-        _selectedCellUI?.SetNewState(UIState.Disabled);
+        if (_selectedCellUI != null)
+        {
+            _selectedCellUI?.SetNewState(UIState.Disabled);
+            //Debug.LogError("GridUI.HandleMouseClick: _selectedCellUI is Null.");
+        }
         
         _grid.SetSelectedCell(cell);
         _selectedCellUI = cellUI;
@@ -62,64 +66,30 @@ public class GridUI : UIBehaviour
         cellUI.SetNewState(UIState.Selected);
     }
 
-    private void HandleMouseOver(Cell cell, CellUI cellUI)
+    private void HandlePointerEntering(Cell cell, CellUI cellUI)
     {
         //Debug.Log("Mouse over: " + cell.GetGridPosition());
         _highlightedCell = cell;
         cellUI.SetNewState(UIState.Highlighted);
     }
     
-    private void HandleMouseExit(Cell cell, CellUI cellUI)
+    private void HandlePointerExiting(Cell cell, CellUI cellUI)
     {
         if (_grid.GetSelectedCell() == cell)
         {
             return;
         }
 
-        if (_unitBeingDragged is not null)
+        if (_objectBeingDragged is not null)
         {
             return;
         }
         
         cellUI.SetNewState(UIState.Disabled);
     }
-
-    private void HandleDragFinished()
+    private void HandleBeginDragging(object objectBeingDragged)
     {
-        foreach (CellUI cellUI in _cellUIs)
-        {
-            //cellUI.SetNewState(cellUI.previousState);
-            cellUI.SetNewState(UIState.Disabled);
-        }
-        
-        //TODO:
-        //This code isn't UI Code and likely belongs in the Grid class instead.
-        //To keep this MVC a refactor will be required. 
-        //Time constraints. No unit logic should be here.
-        
-        if (_unitBeingDragged is not null)
-        {
-            
-            if (_unitBeingDragged.GetCell() == _highlightedCell)
-            {
-                Vector3 originalPosition = _grid.ConvertFromGridPositionToWorldPosition(_unitBeingDragged._gridPosition);
-                _unitBeingDragged.gameObject.transform.position = originalPosition;
-                return;
-            }
-            
-            _unitBeingDragged.SetCurrentCell(_highlightedCell);
-            Vector3 newPosition = _grid.ConvertFromGridPositionToWorldPosition(_highlightedCell.GetGridPosition());
-            _unitBeingDragged.UpdateWorldPosition(newPosition);
-            _unitBeingDragged = null;
-        }
-        
-        //Swap units if dragged ontop of another unit
-        //Add VFX on unit drag finished. But how?
-    }
-
-    private void HandleDragging(Unit unitBeingDragged)
-    {
-        if (unitBeingDragged is null)
+        if (objectBeingDragged is null)
         {
             return;
         }
@@ -129,13 +99,43 @@ public class GridUI : UIBehaviour
             //cellUI.StorePreviousState();
             cellUI.SetNewState(UIState.Highlighted);
         }
-        _unitBeingDragged = unitBeingDragged;
+        _objectBeingDragged = objectBeingDragged;
         
         _grid.SetSelectedCell(null);
+        
+        _grid.HandleBeginDragging(_objectBeingDragged);
+    }
+    
+    private void HandleDragging()
+    {
+        _grid.HandleDragging();
+    }
+    
+    private void HandleEndDrag()
+    {
+        foreach (CellUI cellUI in _cellUIs)
+        {
+            //cellUI.SetNewState(cellUI.previousState);
+            cellUI.SetNewState(UIState.Disabled);
+        }
+        
+        if (_objectBeingDragged is null)
+        {
+            return;
+        }
+        
+        _grid.HandleEndDrag(_objectBeingDragged, _highlightedCell);
+
+        _objectBeingDragged = null;
+
+        //Swap units if dragged ontop of another unit
+        //Add VFX on unit drag finished. But how?
     }
 
     protected override void UpdateWhenDisabled()
     {
+        //Does this happen every update frame?
+        
         //When hiding overall GridUI, cycle through children cellUIs to mark them disabled. 
         foreach (CellUI cellUI in _cellUIs)
         {

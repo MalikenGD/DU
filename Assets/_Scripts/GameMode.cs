@@ -17,8 +17,10 @@ public class GameMode : MonoBehaviour
 
     [SerializeField] private GameObject gridPrefab;
     [SerializeField] private GameObject shopPrefab;
+    [SerializeField] private GameObject playerPrefab;
 
     private Transform _parentTransform;
+    private Player _player;
     private Grid _grid;
     private Shop _shop;
     private GameState _currentGameState;
@@ -37,12 +39,23 @@ public class GameMode : MonoBehaviour
             Debug.LogError("GameMode.Start: Grid not valid");
         }
         
+        GameObject playerGameObject = Instantiate(playerPrefab);
+        if (playerGameObject != null)
+        {
+            _player = playerGameObject.GetComponent<Player>();
+        }
+        else
+        {
+            Debug.LogError("World.Awake: Player not valid.");
+        }
+        
         GameObject shopObject = Instantiate(shopPrefab, transform);
 
         if (shopObject is not null)
         {
             _shop = shopObject.GetComponent<Shop>();
             _shop.SetGridReference(_grid);
+            _shop.SetPlayerReference(_player);
         }
         else
         {
@@ -70,10 +83,12 @@ public class GameMode : MonoBehaviour
                 
                 break;
             case GameState.BuyPhase:
+                //Loop through units and resetpos. 
+                //Return units to origin
+                //Pay round income
                 
                 break;
             case GameState.CombatPhase:
-
                 break;
             default:
                 Debug.LogError("GameMode.ChangeState: Game State Out Of Range");

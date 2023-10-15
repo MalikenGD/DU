@@ -2,23 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private PlayerDataSO _startingPlayerData;
-    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private PlayerDataSO startingPlayerData;
     private int _goldBalance;
     private int _remainingLives;
 
 
     private void Start()
     {
-        _goldBalance = _startingPlayerData.GetStartingGold();
-        _remainingLives = _startingPlayerData.GetStartingLives();
-    }
+        bool isPlayerDataNull = startingPlayerData == null;
 
-    private void OnDrag()
-    {
-        Debug.Log("TEST");
+        if (isPlayerDataNull)
+        {
+            Debug.LogError("Player.Start: StartingPlayerData is null");
+        }
+        
+        _goldBalance = startingPlayerData.GetStartingGold();
+        _remainingLives = startingPlayerData.GetStartingLives();
     }
 }

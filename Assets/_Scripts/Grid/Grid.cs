@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Grid : MonoBehaviour
 {
     [SerializeField] internal GridDataSO gridDataSO;
     private List<Cell> _cells = new List<Cell>();
     private Cell _selectedCell = null;
+    private Unit _unitBeingDragged = null;
 
     public event Action OnGridUpdated;
     public event Action<Cell> OnCellSelected;
@@ -139,7 +141,7 @@ public class Grid : MonoBehaviour
             }
         }
         
-        Debug.LogError($"Could not locate grid object at world position: {worldPos} / grid position: {gridPosition}");
+        Debug.LogError($"Grid.GetCellAtPosition: Could not locate grid object at world position: {worldPos} / grid position: {gridPosition}");
         return null;
     }
 
@@ -194,5 +196,88 @@ public class Grid : MonoBehaviour
     public bool HasSelectedCell()
     {
         return _selectedCell is not null;
+    }
+
+    internal void HandleBeginDragging(object objectBeingDragged)
+    {
+        bool isObjectBeingDraggedNull = objectBeingDragged == null;
+        Cell cell = objectBeingDragged as Cell;
+        bool isCellNull = cell == null;
+
+        if (isObjectBeingDraggedNull || isCellNull)
+        {
+            if (isObjectBeingDraggedNull)
+            {
+                Debug.LogError("Grid.HandleEndDrag: objectBeingDragged is Null.");
+            }
+        
+            if (isCellNull)
+            {
+                Debug.LogError("Grid.HandleEndDrag: cell is Null.");
+            }
+
+            return;
+        }
+
+        _unitBeingDragged = cell.GetUnit();
+        
+        //TODO: Change material to Transparent for duration of dragging.
+    }
+
+    internal void HandleDragging()
+    {
+        if (Camera.main == null)
+        {
+            Debug.LogError("Grid.HandleDragging: Camera.main is null.");
+            return;
+        }
+        Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit);
+        _unitBeingDragged.UpdateWorldPosition(new Vector3(hit.point.x, _unitBeingDragged.transform.position.y, hit.point.z));
+    }
+
+    public void HandleEndDrag(object objectBeingDragged, Cell highlightedCell)
+    {
+        bool isObjectBeingDraggedNull = objectBeingDragged == null;
+        Cell cell = objectBeingDragged as Cell;
+        bool isCellNull = cell == null;
+        bool isHighlightedCellNull = highlightedCell == null;
+
+        if (isObjectBeingDraggedNull || isCellNull || isHighlightedCellNull)
+        {
+            if (isObjectBeingDraggedNull)
+            {
+                Debug.LogError("Grid.HandleEndDrag: objectBeingDragged is Null.");
+            }
+        
+            if (isCellNull)
+            {
+                Debug.LogError("Grid.HandleEndDrag: cell is Null.");
+            }
+        
+            if (isHighlightedCellNull)
+            {
+                Debug.LogError("Grid.HandleEndDrag: highlightedCell is Null.");
+            }
+
+            return;
+        }
+
+
+        Unit unit = cell.GetUnit();
+        
+        if (cell == highlightedCell)
+        {
+            Vector3 originalPosition = ConvertFromGridPositionToWorldPosition(unit._gridPosition);
+            unit.gameObject.transform.position = originalPosition;
+            return;
+        }
+        
+        Vector3 newPosition = ConvertFromGridPositionToWorldPosition(highlightedCell.GetGridPosition());
+        unit.UpdateWorldPosition(newPosition);
+        cell.ClearUnit();
+        highlightedCell.SetUnit(unit);
+        _unitBeingDragged = null;
+        
+        //TODO: Change material back from Transparent.
     }
 }
