@@ -17,7 +17,7 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
     public event Action<Cell, CellUI> OnMouseClick;
     public event Action<object> OnBeginDragging;
     public event Action OnDragging;
-    public event Action OnEndDragging;
+    public event Action<PointerEventData> OnEndDragging;
     public event Action<Cell, CellUI> OnPointerEntering;
     public event Action<Cell, CellUI> OnPointerExiting;
 
@@ -79,7 +79,7 @@ public class CellUI : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, ID
     public void OnEndDrag(PointerEventData eventData)
     {
         //TODO: Change material back from Transparent.
-        OnEndDragging?.Invoke();
+        OnEndDragging?.Invoke(eventData);
     }
 
     protected override void UpdateWhenInteractable()

@@ -53,11 +53,9 @@ public class GridUI : UIBehaviour
 
     private void HandleMouseClick(Cell cell, CellUI cellUI)
     {
-        //Debug.Log($"Cell clicked at {cell.GetGridPosition()}");
         if (_selectedCellUI != null)
         {
             _selectedCellUI?.SetNewState(UIState.Disabled);
-            //Debug.LogError("GridUI.HandleMouseClick: _selectedCellUI is Null.");
         }
         
         _grid.SetSelectedCell(cell);
@@ -111,7 +109,7 @@ public class GridUI : UIBehaviour
         _grid.HandleDragging();
     }
     
-    private void HandleEndDrag()
+    private void HandleEndDrag(PointerEventData pointerEventData)
     {
         foreach (CellUI cellUI in _cellUIs)
         {
@@ -123,6 +121,7 @@ public class GridUI : UIBehaviour
         {
             return;
         }
+        
         
         _grid.HandleEndDrag(_objectBeingDragged, _highlightedCell);
 

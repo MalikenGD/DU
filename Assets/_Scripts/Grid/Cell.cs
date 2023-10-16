@@ -15,7 +15,6 @@ public class Cell
         _cellUIPrefab = cellUIPrefab;
     }
     
-    
     public void SetUnit(Unit unitToSet)
     {
         _occupyingUnit = unitToSet;

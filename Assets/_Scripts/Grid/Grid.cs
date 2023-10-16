@@ -15,7 +15,12 @@ public class Grid : MonoBehaviour
 
     private void Start()
     {
+        if (gridDataSO == null)
+        {
+            Debug.LogError("Grid.Start: GridDataSO is Null.");   
+        }
         Vector2 gridSize = gridDataSO.GetGridSize();
+        
         GameObject cellPrefab = gridDataSO.GetCellDataSO().GetCellUIPrefab();
 
         for (int i = 0; i < gridSize.x; i++)
@@ -26,8 +31,6 @@ public class Grid : MonoBehaviour
                 _cells.Add(cell);
             }
         }
-
-
         CreateGridUI();
     }
 
@@ -41,7 +44,7 @@ public class Grid : MonoBehaviour
         return _cells;
     }
     
-    public Vector3 FormatWorldPositionForGridSnapping(Vector3 dirtyWorldPosition)
+    /*public Vector3 FormatWorldPositionForGridSnapping(Vector3 dirtyWorldPosition)
     {
         //Takes the world position from mouse or other sources and rounds it to snap with center of grid cells
         Vector3 cleanWorldPosition = Vector3.zero;
@@ -49,7 +52,7 @@ public class Grid : MonoBehaviour
         temporaryConversion = ConvertFromWorldPositionToGridPosition(dirtyWorldPosition);
         cleanWorldPosition = ConvertFromGridPositionToWorldPosition(temporaryConversion);
         return cleanWorldPosition;
-    }
+    }*/
 
 
 
@@ -86,7 +89,7 @@ public class Grid : MonoBehaviour
         return gridPosition;
     }
 
-    public void SetUnitAtGridPosition(GridPosition gridPosition, Unit unit)
+    /*public void SetUnitAtGridPosition(GridPosition gridPosition, Unit unit)
     {
         foreach (var cell in _cells)
         {
@@ -97,7 +100,7 @@ public class Grid : MonoBehaviour
                 unit.SetCurrentCell(cell);
             }
         }
-    }
+    }*/
     
     public void SetUnitAtSelectedCell(Unit unit)
     {
@@ -113,8 +116,8 @@ public class Grid : MonoBehaviour
 
         _selectedCell.ClearUnit();
         _selectedCell.SetUnit(unit);
-        unit.InitialSetup(_selectedCell); //TODO: Stop unit from setting it's own position, and move it here instead.
-                                          //This will break CellUI. 
+        unit.SetCurrentCell(_selectedCell);
+                                          
         _selectedCell = null;
     }
 
@@ -161,25 +164,25 @@ public class Grid : MonoBehaviour
         return null;
     }
 
-    public bool IsGridPositionOccupied(GridPosition gridPosition)
+    /*public bool IsGridPositionOccupied(GridPosition gridPosition)
     {
         Cell cell = GetCellAtPosition(gridPosition);
         return cell.GetUnit() is not null;
-    }
+    }*/
 
-    public void UpdateUnitGridPosition(GridPosition gridPosition, Unit unit)
+    /*public void UpdateUnitGridPosition(GridPosition gridPosition, Unit unit)
     {
         ClearUnitAtGridPosition(unit.GetCell().GetGridPosition());
         SetUnitAtGridPosition(gridPosition, unit);
-    }
+    }*/
 
-    public void UpdateUnitGridPosition(Vector3 worldPosition, Unit unit)
+    /*public void UpdateUnitGridPosition(Vector3 worldPosition, Unit unit)
     {
         var gridPosition = ConvertFromWorldPositionToGridPosition(worldPosition);
 
         ClearUnitAtGridPosition(unit.GetCell().GetGridPosition());
         SetUnitAtGridPosition(gridPosition, unit);
-    }
+    }*/
 
     internal void SetSelectedCell(Cell selectedCell)
     {
@@ -218,8 +221,10 @@ public class Grid : MonoBehaviour
 
             return;
         }
-
+        
         _unitBeingDragged = cell.GetUnit();
+        _unitBeingDragged.SetNavMeshAgentActive(false);
+        _unitBeingDragged.SetCurrentCell(cell);
         
         //TODO: Change material to Transparent for duration of dragging.
     }
@@ -261,23 +266,54 @@ public class Grid : MonoBehaviour
 
             return;
         }
-
-
-        Unit unit = cell.GetUnit();
         
-        if (cell == highlightedCell)
+        
+        Vector2 gridSize = gridDataSO.GetGridSize();
+        GridPosition unitGridPosition = ConvertFromWorldPositionToGridPosition(_unitBeingDragged.transform.position);
+        
+        //If unit dragged out of bounds
+        if (unitGridPosition.x > gridSize.x || unitGridPosition.z > gridSize.y || unitGridPosition.x < 0 || unitGridPosition.z < 0)
         {
-            Vector3 originalPosition = ConvertFromGridPositionToWorldPosition(unit._gridPosition);
-            unit.gameObject.transform.position = originalPosition;
+            ResetUnitPosition(_unitBeingDragged);
+            _unitBeingDragged = null;
             return;
         }
+
+        //If dragged on-top of another unit/occupied cell
+        if (highlightedCell.GetUnit() != null)
+        {
+            cell.ClearUnit();
+            cell.SetUnit(highlightedCell.GetUnit());
+            
+            highlightedCell.ClearUnit();
+            highlightedCell.SetUnit(_unitBeingDragged);
+            
+            UpdateUnitPosition(cell.GetUnit(), cell);
+            UpdateUnitPosition(_unitBeingDragged, highlightedCell);
+        }
+        else
+        {
+            UpdateUnitPosition(_unitBeingDragged, highlightedCell);
+            cell.ClearUnit();
+            highlightedCell.SetUnit(_unitBeingDragged);
+        }
+
         
-        Vector3 newPosition = ConvertFromGridPositionToWorldPosition(highlightedCell.GetGridPosition());
-        unit.UpdateWorldPosition(newPosition);
-        cell.ClearUnit();
-        highlightedCell.SetUnit(unit);
+        _unitBeingDragged.SetNavMeshAgentActive(true);
         _unitBeingDragged = null;
         
         //TODO: Change material back from Transparent.
+    }
+
+    private void UpdateUnitPosition(Unit unit, Cell newCell)
+    {
+        Vector3 newPosition = ConvertFromGridPositionToWorldPosition(newCell.GetGridPosition());
+        unit.UpdateWorldPosition(newPosition);
+    }
+
+    private void ResetUnitPosition(Unit unit)
+    {
+        Vector3 originalPosition = ConvertFromGridPositionToWorldPosition(unit.GetCell().GetGridPosition());
+        unit.gameObject.transform.position = originalPosition;
     }
 }

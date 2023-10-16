@@ -1,27 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Unit : MonoBehaviour
 {
-    //TODO:
-    //mesh/model?
-    //name?
-    //stats(Scriptable object?) - Atk range, damage, health
+    [SerializeField] private NavMeshAgent navMeshAgent;
 
-    public GridPosition _gridPosition;
-    private bool _isDamageable = true;
-
+    private Vector3 _homePosition;
+    private int _health;
     private Unit _target;
-
     private Cell _cell;
 
-    public void InitialSetup(Cell cell)
+    private void Start()
     {
-        SetCurrentCell(cell);
-        _gridPosition = _cell.GetGridPosition();
-        //faction?
+        _homePosition = transform.position;
+    }
+
+
+    public void SetCurrentCell(Cell newCell)
+    {
+        //_cell?.ClearUnit();
+        _cell = newCell;
+        //_cell.SetUnit(this);
     }
     
     public Cell GetCell()
@@ -29,20 +32,32 @@ public class Unit : MonoBehaviour
         return _cell;
     }
 
-    public void SetCurrentCell(Cell newCell)
-    {
-        _cell?.ClearUnit();
-        _cell = newCell;
-        _cell.SetUnit(this);
-    }
-
     public void UpdateWorldPosition(Vector3 newWorldPosition)
     {
         transform.position = newWorldPosition;
+        _homePosition = newWorldPosition;
     }
 
-    public void SetGridPosition(GridPosition gridPosition)
+    public void SetNavMeshAgentActive(bool value)
     {
-        _gridPosition = gridPosition;
+        navMeshAgent.enabled = value;
+    }
+    
+    public void OnGameStateChanged(GameState obj)
+    {
+        ResetToDefault();
+    }
+
+    private void ResetToDefault()
+    {
+        //Revert to original position
+        transform.position = _homePosition;
+        //Heal to full
+        
+        //Re-enable if dead
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
     }
 }
