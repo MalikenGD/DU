@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NodeCanvas.BehaviourTrees;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class Shop : MonoBehaviour
     
     
     private Grid _grid;
-    private Player _player;
+    private Player _player; // For gold?
     private Transform _parentTransform;
     private List<UnitDataSO> _units;
     private List<Card> _cardsInHand = new List<Card>();
@@ -137,12 +138,17 @@ public class Shop : MonoBehaviour
 
     private void CreateUnit()
     {
+        
+        
         GameObject unitPrefab = _selectedCardUnit.GetUnitPrefab();
+        BehaviourTree behaviourTree = _selectedCardUnit.GetBehaviourTree();
+
+        
         GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
         Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
 
         //Faction 0 = enemy unit, Faction 1 = player unit
-        Unit newUnit = World.Instance.BuildUnit(unitPrefab, spawningPosition,1);
+        Unit newUnit = World.Instance.BuildUnit(unitPrefab, spawningPosition, behaviourTree, 1);
         
         _grid.SetUnitAtSelectedCell(newUnit);
     }

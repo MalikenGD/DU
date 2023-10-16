@@ -10,12 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 762baf4d53905234c854c0df066a47ce, type: 3}
-  m_Name: Rat
+  m_Name: UnitData
   m_EditorClassIdentifier: 
-  unitPrefab: {fileID: 7559984451616325021, guid: 9805d75c094361144b6eac6c3e74d008,
-    type: 3}
-  behaviourTree: {fileID: 11400000, guid: 51a71e3cccbe36247b468dd666797dc5, type: 2}
-  unitName: Rat
-  spriteForShopBackground: {fileID: 21300000, guid: 03b71e79fc5fa014a8f9a9a5f7dfbbeb,
-    type: 3}
-  unitGoldCost: 15
+  unitPrefab: {fileID: 0}
+  unitName: 
+  spriteForShopBackground: {fileID: 0}
+  unitGoldCost: 0

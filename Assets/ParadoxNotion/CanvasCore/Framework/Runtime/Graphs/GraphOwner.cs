@@ -574,7 +574,7 @@ namespace NodeCanvas.Framework
             {
 #if UNITY_EDITOR
                 //In Editor only and if graph is bound, return the bound graph instance
-                if ( graphIsBound && !ParadoxNotion.Services.Threader.applicationIsPlaying ) {
+                if ( graphIsBound && !Application.isPlaying ) {
                     return boundGraphInstance;
                 }
 #endif

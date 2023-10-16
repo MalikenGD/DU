@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NodeCanvas.BehaviourTrees;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -118,10 +119,10 @@ public class World : MonoBehaviour
         return _uiManager.BuildUI(uiPrefab, builder);
     }
 
-    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, int faction)
+    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, BehaviourTree behaviourTree, int faction)
     {
         //faction 0 = enemy unit, faction 1 = player unit
-        Unit unit = _unitFactory.BuildUnit(unitPrefab, spawningPosition, gameObject.transform);
+        Unit unit = _unitFactory.BuildUnit(unitPrefab, spawningPosition, behaviourTree, gameObject.transform);
 
         if (unit == null)
         {

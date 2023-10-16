@@ -959,6 +959,17 @@ namespace NodeCanvas.Editor
                     GUI.color = Color.white;
                 }
 
+                if ( !string.IsNullOrEmpty(group.notes) ) {
+                    GUI.color = group.color.grayscale > 0.6f ? Color.black : Color.white;
+                    if ( group.editState == CanvasGroup.EditState.EditingComments ) {
+                        GUI.SetNextControlName("GroupComments" + i);
+                        group.notes = GUI.TextArea(group.rect.ExpandBy(-5, -35, -5, -5), group.notes, Styles.topLeftLabel);
+                        GUI.FocusControl("GroupComments" + i);
+                    } else {
+                        GUI.Label(group.rect.ExpandBy(-5, -35, -5, -5), group.notes, Styles.topLeftLabel);
+                    }
+                    GUI.color = Color.white;
+                }
 
                 if ( group.editState == CanvasGroup.EditState.RenamingTitle ) {
                     GUI.SetNextControlName("GroupRename" + i);
@@ -969,6 +980,10 @@ namespace NodeCanvas.Editor
                         GUIUtility.hotControl = 0;
                         GUIUtility.keyboardControl = 0;
                     }
+                }
+
+                if ( group.editState == CanvasGroup.EditState.EditingComments && e.type == EventType.MouseDown && !group.rect.Contains(e.mousePosition) ) {
+                    group.editState = CanvasGroup.EditState.None;
                 }
 
                 if ( e.type == EventType.MouseDown && GraphEditorUtility.allowClick ) {
@@ -985,6 +1000,12 @@ namespace NodeCanvas.Editor
                             var menu = new GenericMenu();
                             menu.AddItem(new GUIContent("Rename"), false, () => { group.editState = CanvasGroup.EditState.RenamingTitle; });
                             menu.AddItem(new GUIContent("Edit Color"), false, () => { DoPopup(() => { group.color = EditorGUILayout.ColorField(group.color); }); });
+                            menu.AddItem(new GUIContent("Make Notes"), false, () =>
+                            {
+                                group.editState = CanvasGroup.EditState.EditingComments;
+                                if ( string.IsNullOrEmpty(group.notes) ) { group.notes = "..."; }
+                                if ( group.color == default(Color) ) { group.color = CanvasGroup.DEFAULT_NOTES_COLOR; }
+                            });
                             menu.AddItem(new GUIContent("Delete"), false, () => { currentGraph.canvasGroups.Remove(group); });
                             GraphEditorUtility.PostGUI += () => { menu.ShowAsContext(); };
                         } else if ( e.button == 0 ) {

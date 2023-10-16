@@ -54,7 +54,7 @@ namespace NodeCanvas.Editor
             resourcesIcon = Resources.Load("Resources") as Texture2D;
             supportIcon = Resources.Load("Support") as Texture2D;
             communityIcon = Resources.Load("Community") as Texture2D;
-            var size = new Vector2(header != null ? header.width : 800, 455);
+            var size = new Vector2(header != null ? header.width : 800, 435);
             minSize = size;
             maxSize = size;
             FetchWebMessageBoard();
@@ -158,10 +158,6 @@ namespace NodeCanvas.Editor
             ///----------------------------------------------------------------------------------------------
 
             GUILayout.FlexibleSpace();
-
-            GUILayout.Label(string.Format("Consider leaving a review to support {0}!", packageName));
-
-            GUILayout.Space(5);
 
             Prefs.hideWelcomeWindow = EditorGUILayout.ToggleLeft("Don't show again.", Prefs.hideWelcomeWindow);
 

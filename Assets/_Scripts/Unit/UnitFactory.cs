@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using NodeCanvas.BehaviourTrees;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class UnitFactory
 {
-    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, Transform parentTransform)
+    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, BehaviourTree behaviourTree, Transform parentTransform)
     {
         GameObject unitGameObject = GameObject.Instantiate(unitPrefab, spawningPosition, quaternion.identity);
         unitGameObject.transform.parent = parentTransform;
@@ -17,8 +18,9 @@ public class UnitFactory
             Debug.LogError("UnitFactory.BuildUnit: unitGameObject has no Unit");
             return null;
         }
-
         SubscribeToEvents(unit);
+
+        unit.SetBehaviourTree(behaviourTree);
         
         return unit;
     }

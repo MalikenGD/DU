@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NodeCanvas.BehaviourTrees;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,9 +9,11 @@ using UnityEngine.AI;
 public class Unit : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private UnitBrain unitBrain;
 
     private Vector3 _homePosition;
     private int _health;
+    
     private Unit _target;
     private Cell _cell;
 
@@ -19,12 +22,14 @@ public class Unit : MonoBehaviour
         _homePosition = transform.position;
     }
 
+    public void SetBehaviourTree(BehaviourTree behaviourTree)
+    {
+        unitBrain.SetBehaviourTree(behaviourTree);
+    }
 
     public void SetCurrentCell(Cell newCell)
     {
-        //_cell?.ClearUnit();
         _cell = newCell;
-        //_cell.SetUnit(this);
     }
     
     public Cell GetCell()

@@ -1,14 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using NodeCanvas.Tasks.Actions;
 using UnityEngine;
 
-public class Controller
+public abstract class Controller : MonoBehaviour
 {
-    private List<BaseAction> _actions; // List of Actions for Controller
-    
-    public virtual void Move()
-    {
-        
-    }
+    //private List<BaseAction> _actions; // List of Actions for Controller
+
+    public abstract void HandleInputs();
 }

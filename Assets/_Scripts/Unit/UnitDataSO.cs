@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NodeCanvas.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,6 +8,7 @@ using UnityEngine.Serialization;
 public class UnitDataSO : ScriptableObject
 {
     [SerializeField] private GameObject unitPrefab;
+    [SerializeField] private BehaviourTree behaviourTree;
     [SerializeField] private string unitName;
     [SerializeField] private Sprite spriteForShopBackground;
     [SerializeField] private int unitGoldCost;
@@ -14,6 +16,16 @@ public class UnitDataSO : ScriptableObject
     public GameObject GetUnitPrefab()
     {
         return unitPrefab;
+    }
+
+    /*public Brain GetBrainPrefab()
+    {
+        return unitBrainprefab;
+    }*/
+
+    public BehaviourTree GetBehaviourTree()
+    {
+        return behaviourTree;
     }
 
     public string GetUnitName()
