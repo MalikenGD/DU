@@ -53,10 +53,7 @@ public class Grid : MonoBehaviour
         cleanWorldPosition = ConvertFromGridPositionToWorldPosition(temporaryConversion);
         return cleanWorldPosition;
     }*/
-
-
-
-
+    
     public Vector3 ConvertFromGridPositionToWorldPosition(GridPosition gridPosition)
     {
         return new Vector3(51f + gridPosition.x, 0, 21f + gridPosition.z);

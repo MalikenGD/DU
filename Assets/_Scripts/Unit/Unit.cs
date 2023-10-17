@@ -14,13 +14,14 @@ public class Unit : MonoBehaviour
     private Vector3 _homePosition;
     private int _health;
     
-    private Unit _target;
+    
     private Cell _cell;
 
     private void Start()
     {
         _homePosition = transform.position;
     }
+    
 
     public void SetBehaviourTree(BehaviourTree behaviourTree)
     {
