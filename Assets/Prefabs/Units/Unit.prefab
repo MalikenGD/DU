@@ -85,6 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 6016833326931060973}
   behaviourTreeOwner: {fileID: 8819618596892472101}
+  _unitGridBehaviour: {fileID: 5010778218210604411}
   _target: {fileID: 0}
   _targetPosition: {x: 0, y: 0, z: 0}
   _cellPositions: []

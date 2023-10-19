@@ -5,6 +5,8 @@ using NodeCanvas.BehaviourTrees;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -135,7 +137,7 @@ public class Shop : MonoBehaviour
             _selectedCardUnit = null;
         }
     }
-
+    
     private void CreateUnit()
     {
         
@@ -149,6 +151,7 @@ public class Shop : MonoBehaviour
 
         
         Unit newUnit = World.Instance.BuildUnit(unitPrefab);
+        newUnit.gameObject.transform.position = spawningPosition;
 
         if (!newUnit.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
         {
@@ -157,8 +160,8 @@ public class Shop : MonoBehaviour
         }
 
         World.Instance.OnGameStateChanged += unitGridBehaviour.OnGameStateChanged;
-        unitGridBehaviour.transform.position = spawningPosition;
-        unitGridBehaviour.SetBehaviourTree(behaviourTree);
+        
+        unitGridBehaviour.InitializeUnit(behaviourTree);
         
         _grid.SetUnitAtSelectedCell(newUnit);
     }

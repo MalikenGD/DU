@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -11,7 +7,7 @@ public class Player : MonoBehaviour
     private int _remainingLives;
 
 
-    private void Start()
+    /*private void Start()
     {
         bool isPlayerDataNull = startingPlayerData == null;
 
@@ -22,5 +18,5 @@ public class Player : MonoBehaviour
         
         _goldBalance = startingPlayerData.GetStartingGold();
         _remainingLives = startingPlayerData.GetStartingLives();
-    }
+    }*/
 }

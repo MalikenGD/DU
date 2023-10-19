@@ -13,6 +13,8 @@ public class UnitGridBehaviour : MonoBehaviour
     private Cell _cell;
     
     private Vector3 _homePosition;
+
+    public event Action OnUnitInitialized;
     
     private void Start()
     {
@@ -21,12 +23,29 @@ public class UnitGridBehaviour : MonoBehaviour
 
     private void Update()
     {
-        UnityEngine.Debug.Log($"Navmesh destination is: {navMeshAgent.destination.ToString()}");
+        /*UnityEngine.Debug.Log($"Navmesh destination is: {navMeshAgent.destination.ToString()}");
         Debug.Log($"Home position is {_homePosition}");
-        Debug.Log($"Current position is: {transform.position}");
+        Debug.Log($"Current position is: {transform.position}");*/
     }
 
-    public void SetBehaviourTree(BehaviourTree behaviourTree)
+    public void InitializeUnit(BehaviourTree behaviourTree)
+    {
+        bool isNavmeshAgentNull = navMeshAgent == null;
+
+        if (isNavmeshAgentNull)
+        {
+            Debug.LogError("UnitGridBehaviour.InitializeUnit: NavmeshAgent is null.");
+            return;
+        }
+
+        navMeshAgent.enabled = false;
+        navMeshAgent.enabled = true;
+        
+        SetBehaviourTree(behaviourTree);
+        OnUnitInitialized?.Invoke();
+    }
+
+    private void SetBehaviourTree(BehaviourTree behaviourTree)
     {
         unitBrain.SetBehaviourTree(behaviourTree);
     }
@@ -38,7 +57,6 @@ public class UnitGridBehaviour : MonoBehaviour
 
     public void UpdateWorldPosition(Vector3 newWorldPosition)
     {
-        Debug.Log("UDPATING WORLD POS");
         transform.position = newWorldPosition;
         _homePosition = newWorldPosition;
     }

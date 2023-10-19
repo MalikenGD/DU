@@ -9,8 +9,7 @@ public class UnitFactory
 {
     public Unit BuildUnit(GameObject unitPrefab, Transform parentTransform)
     {
-        GameObject unitGameObject = GameObject.Instantiate(unitPrefab);
-        //unitGameObject.transform.SetParent(parentTransform);
+        GameObject unitGameObject = GameObject.Instantiate(unitPrefab, parentTransform, true);
         Unit unit = unitGameObject.GetComponent<Unit>();
 
         if (unit == null)

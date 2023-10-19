@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NodeCanvas.BehaviourTrees;
 using Sirenix.OdinInspector;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -12,14 +13,16 @@ public class UnitBrain : Brain
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private BehaviourTreeOwner behaviourTreeOwner;
     private Unit _unit;
+    [SerializeField] private UnitGridBehaviour _unitGridBehaviour;
     public Unit _target;
     public Vector3 _targetPosition;
 
     public List<Vector3> _cellPositions = new List<Vector3>(70);
 
+
+    
     private void Awake()
     {
-        Debug.Log("GETTING CELL POSITIONS");
         for (int i = 0; i < 7; i++)
         {
             for (int j = 0; j < 10; j++)
@@ -28,38 +31,59 @@ public class UnitBrain : Brain
             }
         }
         _targetPosition = new Vector3(54f, 0f, 30f);
+
+        /*_unitGridBehaviour = GetComponent<UnitGridBehaviour>();
+
+        bool isUnitGridBehaviourNull = _unitGridBehaviour == null;
+        if (isUnitGridBehaviourNull)
+        {
+            Debug.LogError("UnitBrain.Awake: UnitGridBehaviour is Null.");
+        }*/
         
-        //Debug.Break();
+        
     }
 
     private void Start()
     {
-        UnityEngine.Debug.Log($"Navmesh destination is: {navMeshAgent.destination.ToString()}");
-        Debug.Log($"Current position is: {transform.position}");
-        Debug.Log("TESTING");
         
+    }
+
+    private void InitializeBrain()
+    {
+        ResetNavmeshDestination();
+        StartBehaviour();
+    }
+
+
+    private void ResetNavmeshDestination()
+    {
         navMeshAgent.SetDestination(transform.position);
+    }
+
+    private void StartBehaviour()
+    {
         behaviourTreeOwner.StartBehaviour();
     }
 
     private void Update()
     {
-        navMeshAgent.SetDestination(new Vector3(57, 0, 29));
+        //navMeshAgent.SetDestination(new Vector3(57, 0, 29));
     }
 
     private void OnEnable()
     {
         World.Instance.OnGameStateChanged += OnGameStateChanged;
+        _unitGridBehaviour.OnUnitInitialized += InitializeBrain;
     }
 
     private void OnDisable()
     {
         World.Instance.OnGameStateChanged -= OnGameStateChanged;
+        _unitGridBehaviour.OnUnitInitialized -= InitializeBrain;
     }
 
     private void OnGameStateChanged(GameState newGameState)
     {
-        Debug.Log("TESTING1");
         switch (newGameState)
         {
             case GameState.CombatPhase:
