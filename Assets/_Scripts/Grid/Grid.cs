@@ -101,19 +101,31 @@ public class Grid : MonoBehaviour
     
     public void SetUnitAtSelectedCell(Unit unit)
     {
-        if (_selectedCell == null)
+        bool isSelectedCellNull = _selectedCell == null;
+        bool isUnitNull = unit == null;
+
+        if (!unit.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
         {
-            Debug.LogError("Grid.SetUnitAtGridPosition(unit): Attempting to set unit at null selected cell.");
+            Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
         }
 
-        if (unit == null)
+        if (isSelectedCellNull || isUnitNull)
         {
-            Debug.LogError("Grid.SetUnitAtGridPosition(unit): Attempting to set null unit at selected cell.");
+            if (isSelectedCellNull)
+            {
+                Debug.LogError("Grid.SetUnitAtGridPosition(unit): Attempting to set unit at null selected cell.");
+            }
+
+            if (isUnitNull)
+            {
+                Debug.LogError("Grid.SetUnitAtGridPosition(unit): Attempting to set null unit at selected cell.");
+            }
+            return;
         }
 
         _selectedCell.ClearUnit();
         _selectedCell.SetUnit(unit);
-        unit.SetCurrentCell(_selectedCell);
+        unitGridBehaviour.SetCurrentCell(_selectedCell);
                                           
         _selectedCell = null;
     }
@@ -141,7 +153,7 @@ public class Grid : MonoBehaviour
             }
         }
         
-        Debug.LogError($"Grid.GetCellAtPosition: Could not locate grid object at world position: {worldPos} / grid position: {gridPosition}");
+        Debug.LogError($"Grid.GetCellAtPosition(GridPosition): Could not locate grid object at world position: {worldPos} / grid position: {gridPosition}");
         return null;
     }
 
@@ -157,7 +169,7 @@ public class Grid : MonoBehaviour
             }
         }
 
-        Debug.LogError($"Could not locate grid object at world position: {worldPos} / grid position: {gridPosition}");
+        Debug.LogError($"Grid.GetCellAtPosition(Vector3): Could not locate grid object at world position: {worldPos} / grid position: {gridPosition}");
         return null;
     }
 
@@ -220,8 +232,15 @@ public class Grid : MonoBehaviour
         }
         
         _unitBeingDragged = cell.GetUnit();
-        _unitBeingDragged.SetNavMeshAgentActive(false); // Turn off navmesh agent to prevent collision while dragging.
-        _unitBeingDragged.SetCurrentCell(cell);
+        
+        if (!_unitBeingDragged.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        {
+            Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
+            return;
+        }
+        
+        unitGridBehaviour.SetNavMeshAgentActive(false); // Turn off navmesh agent to prevent collision while dragging.
+        unitGridBehaviour.SetCurrentCell(cell);
         
         //TODO: Change material to Transparent for duration of dragging.
     }
@@ -233,8 +252,15 @@ public class Grid : MonoBehaviour
             Debug.LogError("Grid.HandleDragging: Camera.main is null.");
             return;
         }
+        
+        if (!_unitBeingDragged.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        {
+            Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
+            return;
+        }
+        
         Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit);
-        _unitBeingDragged.UpdateWorldPosition(new Vector3(hit.point.x, _unitBeingDragged.transform.position.y, hit.point.z));
+        unitGridBehaviour.UpdateWorldPosition(new Vector3(hit.point.x, _unitBeingDragged.transform.position.y, hit.point.z));
     }
 
     public void HandleEndDrag(object objectBeingDragged, Cell highlightedCell)
@@ -294,23 +320,40 @@ public class Grid : MonoBehaviour
             cell.ClearUnit();
             highlightedCell.SetUnit(_unitBeingDragged);
         }
-
         
-        _unitBeingDragged.SetNavMeshAgentActive(true);
+        if (!_unitBeingDragged.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        {
+            Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
+            return;
+        }
+        
+        unitGridBehaviour.SetNavMeshAgentActive(true);
         _unitBeingDragged = null;
         
         //TODO: Change material back from Transparent.
     }
-
+    
     private void UpdateUnitPosition(Unit unit, Cell newCell)
     {
+        if (!unit.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        {
+            Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
+            return;
+        }
+        
         Vector3 newPosition = ConvertFromGridPositionToWorldPosition(newCell.GetGridPosition());
-        unit.UpdateWorldPosition(newPosition);
+        unitGridBehaviour.UpdateWorldPosition(newPosition);
     }
 
     private void ResetUnitPosition(Unit unit)
     {
-        Vector3 originalPosition = ConvertFromGridPositionToWorldPosition(unit.GetCell().GetGridPosition());
+        if (!unit.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        {
+            Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
+            return;
+        }
+        
+        Vector3 originalPosition = ConvertFromGridPositionToWorldPosition(unitGridBehaviour.GetCell().GetGridPosition());
         unit.gameObject.transform.position = originalPosition;
     }
 }

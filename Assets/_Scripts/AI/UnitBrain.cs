@@ -19,6 +19,7 @@ public class UnitBrain : Brain
 
     private void Awake()
     {
+        Debug.Log("GETTING CELL POSITIONS");
         for (int i = 0; i < 7; i++)
         {
             for (int j = 0; j < 10; j++)
@@ -27,10 +28,15 @@ public class UnitBrain : Brain
             }
         }
         _targetPosition = new Vector3(54f, 0f, 30f);
+        
+        //Debug.Break();
     }
 
     private void Start()
     {
+        UnityEngine.Debug.Log($"Navmesh destination is: {navMeshAgent.destination.ToString()}");
+        Debug.Log($"Current position is: {transform.position}");
+        Debug.Log("TESTING");
         
         navMeshAgent.SetDestination(transform.position);
         behaviourTreeOwner.StartBehaviour();
@@ -38,7 +44,7 @@ public class UnitBrain : Brain
 
     private void Update()
     {
-        UnityEngine.Debug.Log(navMeshAgent.destination);
+        navMeshAgent.SetDestination(new Vector3(57, 0, 29));
     }
 
     private void OnEnable()
@@ -53,6 +59,7 @@ public class UnitBrain : Brain
 
     private void OnGameStateChanged(GameState newGameState)
     {
+        Debug.Log("TESTING1");
         switch (newGameState)
         {
             case GameState.CombatPhase:

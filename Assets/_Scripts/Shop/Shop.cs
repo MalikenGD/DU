@@ -147,8 +147,18 @@ public class Shop : MonoBehaviour
         GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
         Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
 
-        //Faction 0 = enemy unit, Faction 1 = player unit
-        Unit newUnit = World.Instance.BuildUnit(unitPrefab, spawningPosition, behaviourTree, 1);
+        
+        Unit newUnit = World.Instance.BuildUnit(unitPrefab);
+
+        if (!newUnit.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        {
+            Debug.LogError("Shop.CreateUnit: newUnit's UnitGridBehaviour is null.");
+            return;
+        }
+
+        World.Instance.OnGameStateChanged += unitGridBehaviour.OnGameStateChanged;
+        unitGridBehaviour.transform.position = spawningPosition;
+        unitGridBehaviour.SetBehaviourTree(behaviourTree);
         
         _grid.SetUnitAtSelectedCell(newUnit);
     }

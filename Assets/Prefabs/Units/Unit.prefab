@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: -822531861672013666}
   - component: {fileID: 8819618596892472101}
   - component: {fileID: -650474810528041846}
-  - component: {fileID: -9140419055740209081}
+  - component: {fileID: 5010778218210604411}
+  - component: {fileID: 6016833326931060973}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Unit
@@ -70,8 +71,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841a5e311f399c74a985e8e23117d3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: -9140419055740209081}
-  unitBrain: {fileID: -822531861672013666}
 --- !u!114 &-822531861672013666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5767d1a89087c84b9e3a12b4c51d671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: -9140419055740209081}
+  navMeshAgent: {fileID: 6016833326931060973}
   behaviourTreeOwner: {fileID: 8819618596892472101}
   _target: {fileID: 0}
   _targetPosition: {x: 0, y: 0, z: 0}
@@ -168,7 +167,21 @@ MonoBehaviour:
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
     _references: []
---- !u!195 &-9140419055740209081
+--- !u!114 &5010778218210604411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842788214119597134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41990006babeced48b1660d3e8ccf067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navMeshAgent: {fileID: 6016833326931060973}
+  unitBrain: {fileID: -822531861672013666}
+--- !u!195 &6016833326931060973
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,16 +190,16 @@ NavMeshAgent:
   m_GameObject: {fileID: 842788214119597134}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.01
+  m_StoppingDistance: 0.05
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 5
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4

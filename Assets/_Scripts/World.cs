@@ -119,31 +119,43 @@ public class World : MonoBehaviour
         return _uiManager.BuildUI(uiPrefab, builder);
     }
 
-    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, BehaviourTree behaviourTree, int faction)
+    public Unit BuildUnit(GameObject unitPrefab)
     {
         //faction 0 = enemy unit, faction 1 = player unit
-        Unit unit = _unitFactory.BuildUnit(unitPrefab, spawningPosition, behaviourTree, gameObject.transform);
+        Unit unit = _unitFactory.BuildUnit(unitPrefab, gameObject.transform);
 
         if (unit == null)
         {
             Debug.LogError("World.BuildUnit: Unit created is null.");
             return null;
         }
+
+        return unit;
+    }
+
+    public void AddUnit(Unit unit)
+    {
+        bool isUnitNull = unit == null;
+
+        if (isUnitNull)
+        {
+            Debug.LogError("World.AddUnit: Unit is null.");
+            return;
+        }
+
+        string unitTag = unit.tag;
         
-        if (faction == 0)
+        if (unitTag == "PlayerUnit")
+        {
+            _playerUnits.Add(unit);
+        } else if (unitTag == "EnemyUnit")
         {
             _enemyUnits.Add(unit);
         }
-        else if (faction == 1)
-        {
-            _playerUnits.Add(unit);
-        }
         else
         {
-            Debug.LogError("World.BuildUnit: Faction selection out of range.");
+            Debug.LogError("World.AddUnit: Created Unit has mismatched Tag.");
         }
-
-        return unit;
     }
 }
 

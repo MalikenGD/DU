@@ -7,10 +7,10 @@ using UnityEngine;
 
 public class UnitFactory
 {
-    public Unit BuildUnit(GameObject unitPrefab, Vector3 spawningPosition, BehaviourTree behaviourTree, Transform parentTransform)
+    public Unit BuildUnit(GameObject unitPrefab, Transform parentTransform)
     {
-        GameObject unitGameObject = GameObject.Instantiate(unitPrefab, spawningPosition, quaternion.identity);
-        unitGameObject.transform.parent = parentTransform;
+        GameObject unitGameObject = GameObject.Instantiate(unitPrefab);
+        //unitGameObject.transform.SetParent(parentTransform);
         Unit unit = unitGameObject.GetComponent<Unit>();
 
         if (unit == null)
@@ -18,24 +18,11 @@ public class UnitFactory
             Debug.LogError("UnitFactory.BuildUnit: unitGameObject has no Unit");
             return null;
         }
-        SubscribeToEvents(unit);
-
-        unit.SetBehaviourTree(behaviourTree);
         
         return unit;
     }
-
-    private void SubscribeToEvents(Unit unit)
-    {
-        World.Instance.OnGameStateChanged += unit.OnGameStateChanged;
-    }
     
-    private void UnSubscribeFromEvents(Unit unit)
-    {
-        World.Instance.OnGameStateChanged -= unit.OnGameStateChanged;
-    }
-
-
+    
     public void DestroyUnit(Unit unit)
     {
         if (unit is null)
@@ -43,7 +30,7 @@ public class UnitFactory
             Debug.LogError("UnitFactory.DestroyUnit: Unit is null.");
             return;
         }
-        UnSubscribeFromEvents(unit);
+        //UnSubscribeFromEvents(unit); // TODO: Figure out a way to unsubscribe from all events it may be subscribed to.
         GameObject.Destroy(unit);
     }
 }
