@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:editor="UnityEditor.UIElements"
+        xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+    <engine:ScrollView style="padding: 10px; padding-top: 0;">
+        <engine:Box class="c-box">
+            <engine:Box class="c-box__header">
+                <engine:Label class="header-3" text="VFX"/>
+            </engine:Box>
+            <engine:Label text="These are all the VFX-prefabs in your project that you've set to 'Shared pool'"
+                          style="padding: 5px; padding-bottom: 0; -unity-font-style: italic;"/>
+
+            <engine:VisualElement class="c-pools-header" style="margin-top: 10px;">
+                <engine:Label class="c-pooled-item__name" text="Prefab name"/>
+                <engine:Label class="c-pooled-item__count" text="Pooled count"/>
+                <engine:Label text="Used in"/>
+            </engine:VisualElement>
+            <engine:VisualElement name="vfx-pools-container" class="c-pools-container"/>
+        </engine:Box>
+
+        <engine:Box class="c-box">
+            <engine:Box class="c-box__header">
+                <engine:Label class="header-3" text="Projectiles"/>
+            </engine:Box>
+            <engine:Label text="These are all the projectiles assigned to abilities."
+                          style="padding: 5px; padding-bottom: 0; -unity-font-style: italic;"/>
+
+            <engine:Button name="refresh-pool-state-btn" text="Refresh pool state" tooltip="When changing scenes or removing pools, click this to re-evaluate which pools are spawned in the scene." class="c-button--blue"/>
+            <engine:VisualElement class="c-pools-header" style="margin-top: 10px;">
+                <engine:Label class="c-pooled-item__name" text="Prefab name"/>
+                <engine:Label class="c-pooled-item__count" text="Pooled count"/>
+                <engine:Label style="width: 85px" />
+                <engine:Label text="Used in"/>
+            </engine:VisualElement>
+
+            <engine:VisualElement name="projectiles-pools-container" class="c-pools-container"/>
+        </engine:Box>
+    </engine:ScrollView>
+</engine:UXML>

@@ -1,0 +1,65 @@
+﻿.icon-prefab {
+    background-image: resource("Prefab Icon");
+}
+
+.icon-light {
+    width: 16px;
+    height: 16px;
+}
+
+.icon-light--green {
+    background-image: resource("greenLight");
+}
+
+.icon-light--red {
+    background-image: resource("redLight");
+}
+
+.icon-light--orange {
+    background-image: resource("orangeLight");
+}
+
+
+.icon-minus {
+    background-image: resource("d_Toolbar Minus");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon-help {
+    background-image: resource("d__Help@2x");
+    -unity-background-image-tint-color: #99BEFF;
+    -unity-background-scale-mode: scale-and-crop;
+    width: 25px;
+    align-self: flex-end;
+    cursor: link;
+}
+
+.icon-plus {
+    background-image: resource("d_Toolbar Plus");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon-settings {
+    background-image: resource("d_CustomTool");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon-refresh {
+    background-image: resource("Refresh");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon-warning {
+    background-image: resource("console.warnicon.sml");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon-error {
+    background-image: resource("console.erroricon.sml");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.icon-hierarchy {
+    background-image: resource("d_UnityEditor.SceneHierarchyWindow");
+    -unity-background-scale-mode: scale-to-fit;
+}
