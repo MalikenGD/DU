@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8036862396574051722
+--- !u!1 &2874836464917741903
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3747107729377096866}
-  - component: {fileID: 5933535362086650053}
+  - component: {fileID: 3011252245301397270}
+  - component: {fileID: 4056237942349796132}
   m_Layer: 0
-  m_Name: GameMode
+  m_Name: AIController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3747107729377096866
+--- !u!4 &3011252245301397270
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8036862396574051722}
+  m_GameObject: {fileID: 2874836464917741903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 54.941063, y: 1.241921, z: 28.63898}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5933535362086650053
+--- !u!114 &4056237942349796132
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8036862396574051722}
+  m_GameObject: {fileID: 2874836464917741903}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40f6d79152edbae4ca49531533601f5c, type: 3}
+  m_Script: {fileID: 11500000, guid: 54cdd738093f51f419ed5656e1be7bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPrefab: {fileID: 776463347070556647, guid: 348447bbcb3c89e4e8e3d3722937fc41,
-    type: 3}
-  shopPrefab: {fileID: 1467413358742503626, guid: 5eb274922974cb34f92977358cfb1d5e,
-    type: 3}
-  playerPrefab: {fileID: 1307968913455133157, guid: 65068220593be32429d8c907ccc9c930,
-    type: 3}
-  aiControllerPrefab: {fileID: 4056237942349796132, guid: 759cfeb1172044a499e993e28d8f83b3,
-    type: 3}
-  testUnit: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  unitGridBehaviour: {fileID: 0}

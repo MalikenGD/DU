@@ -2,7 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 public enum GameState
 {
@@ -24,6 +27,7 @@ public class GameMode : MonoBehaviour
     private Grid _grid;
     private Shop _shop;
     private GameState _currentGameState;
+    [SerializeField] private AIController aiControllerPrefab;
 
 
     private void Awake()
@@ -54,8 +58,9 @@ public class GameMode : MonoBehaviour
         if (shopObject is not null)
         {
             _shop = shopObject.GetComponent<Shop>();
-            _shop.SetGridReference(_grid);
-            _shop.SetPlayerReference(_player);
+            _shop.SetGridReference(_grid); // So Shop can access/set selectedCell
+            _shop.SetPlayerReference(_player); // For spending currency to buy item
+            _shop.OnGridUnitCreated += CreateAIController;
         }
         else
         {
@@ -67,6 +72,15 @@ public class GameMode : MonoBehaviour
     {
         ChangeState(GameState.GameStart);
     }
+    
+    public void CreateAIController(Unit unit)
+    {
+        AIController aiController = Instantiate(aiControllerPrefab, transform.parent, true);
+        aiController.Initialize(unit);
+        
+        aiController.transform.parent = unit.transform;
+    }
+
     private void ChangeState(GameState newGameState)
     {
         

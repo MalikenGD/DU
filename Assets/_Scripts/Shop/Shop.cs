@@ -17,7 +17,8 @@ public class Shop : MonoBehaviour
     [SerializeField] private ShopDataSO shopData;
     
     [SerializeField] private int maxCardsAllowedInHand = 5;
-    
+
+    public event Action<Unit> OnGridUnitCreated;
     
     private Grid _grid;
     private Player _player; // For gold?
@@ -133,37 +134,62 @@ public class Shop : MonoBehaviour
         if (_grid.HasSelectedCell())
         {
             CreateUnit();
-            //_grid.SetSelectedCell(null); TODO: DO THIS 
             _selectedCardUnit = null;
         }
     }
     
     private void CreateUnit()
     {
-        
-        
         GameObject unitPrefab = _selectedCardUnit.GetUnitPrefab();
-        BehaviourTree behaviourTree = _selectedCardUnit.GetBehaviourTree();
-
-        
-        GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
-        Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
-
         
         Unit newUnit = World.Instance.BuildUnit(unitPrefab);
-        newUnit.gameObject.transform.position = spawningPosition;
-
-        if (!newUnit.TryGetComponent<UnitGridBehaviour>(out UnitGridBehaviour unitGridBehaviour))
+        
+        if (_grid.HasSelectedCell())
         {
-            Debug.LogError("Shop.CreateUnit: newUnit's UnitGridBehaviour is null.");
-            return;
-        }
+            GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
+            Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
+            BehaviourTree behaviourTree = _selectedCardUnit.GetBehaviourTree();
+            UnitGridBehaviour unitGridBehaviour = newUnit.AddComponent<UnitGridBehaviour>();
+            
+            OnGridUnitCreated?.Invoke(newUnit);
+            
+            AIController aiController = newUnit.GetComponentInChildren<AIController>();
+            bool isAIControllerNull = aiController == null;
 
-        World.Instance.OnGameStateChanged += unitGridBehaviour.OnGameStateChanged;
+            if (isAIControllerNull)
+            {
+                Debug.LogError("Shop.CreateUnit: AIControllerIsNull for New Unit.");
+                //Can't return, too late in code?
+            }
         
-        unitGridBehaviour.InitializeUnit(behaviourTree);
+            aiController.SetBehaviourTree(behaviourTree);
+            
+            World.Instance.OnGameStateChanged += unitGridBehaviour.OnGameStateChanged;
+            
+            newUnit.gameObject.transform.position = spawningPosition;
+            
+            _grid.SetUnitAtSelectedCell(newUnit);
+        }
         
-        _grid.SetUnitAtSelectedCell(newUnit);
+
+        
+
+        //Someone should subscribe to this, but maybe it's brain?\
+        //This is mostly for turning on/off the navmesh,
+        //But will eventually be for resetting unit position (movement component?)
+        //And Resetting health (health component?)
+        
+        
+        
+        //Create unit
+        //--
+        //
+        //--
+        //Register(?) unit to the GameMode
+        //GameMode creates AIController
+        //GameMode assigns AIController new Unit
+        //AIController creates Brain and passes in this unit as ControlledUnit
+        //Brain then communicates with MovementComponent
     }
 
     public void SetPlayerReference(Player player)

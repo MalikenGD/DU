@@ -238,7 +238,8 @@ public class Grid : MonoBehaviour
             Debug.LogError("Grid.SetUnitAtSelectedCell: Unit has no UnitGridBehaviour.");
             return;
         }
-        
+
+        //unitGridBehaviour.UnitDragBegin();
         unitGridBehaviour.SetNavMeshAgentActive(false); // Turn off navmesh agent to prevent collision while dragging.
         unitGridBehaviour.SetCurrentCell(cell);
         

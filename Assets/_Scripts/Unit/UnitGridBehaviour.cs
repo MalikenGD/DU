@@ -1,53 +1,30 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using NodeCanvas.BehaviourTrees;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class UnitGridBehaviour : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
-    [SerializeField] private UnitBrain unitBrain;
 
     private Cell _cell;
     
     private Vector3 _homePosition;
 
-    public event Action OnUnitInitialized;
+    public event Action OnUnitDragBegin;
+    public event Action OnUnitDragEnd;
     
     private void Start()
     {
         _homePosition = transform.position;
     }
 
-    private void Update()
+    public void UnitDragBegin()
     {
-        /*UnityEngine.Debug.Log($"Navmesh destination is: {navMeshAgent.destination.ToString()}");
-        Debug.Log($"Home position is {_homePosition}");
-        Debug.Log($"Current position is: {transform.position}");*/
+        OnUnitDragBegin?.Invoke();
     }
-
-    public void InitializeUnit(BehaviourTree behaviourTree)
+    public void UnitDragEnd()
     {
-        bool isNavmeshAgentNull = navMeshAgent == null;
-
-        if (isNavmeshAgentNull)
-        {
-            Debug.LogError("UnitGridBehaviour.InitializeUnit: NavmeshAgent is null.");
-            return;
-        }
-
-        navMeshAgent.enabled = false;
-        navMeshAgent.enabled = true;
-        
-        SetBehaviourTree(behaviourTree);
-        OnUnitInitialized?.Invoke();
-    }
-
-    private void SetBehaviourTree(BehaviourTree behaviourTree)
-    {
-        unitBrain.SetBehaviourTree(behaviourTree);
+        OnUnitDragEnd?.Invoke();
     }
     
     public void SetCurrentCell(Cell newCell)
