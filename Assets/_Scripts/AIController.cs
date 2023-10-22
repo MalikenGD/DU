@@ -21,6 +21,13 @@ public class AIController : Controller
         SetControlledUnit(unit);
         navMeshAgent = GetComponentInParent<NavMeshAgent>();
         CreateBrain();
+        navMeshAgent = _brain.navMeshAgent;
+
+    }
+
+    public void ToggleNavMesh()
+    {
+        navMeshAgent.enabled = !navMeshAgent.enabled;
     }
 
     private void Update()
@@ -29,6 +36,11 @@ public class AIController : Controller
         {
             navMeshAgent.SetDestination(Vector3.zero);
         }
+
+        /*Debug.Log($"Brain Variable -selfPosition- is: {_brain.selfPosition.value}");
+        Debug.Log($"Brain Variable -navMeshDestination- is: {_brain.navMeshDestination.value}");
+        Debug.Log($"SelfPosition  is {_controlledUnit.transform.position}");
+        Debug.Log($"Navmesh destination is {navMeshAgent.destination}");*/
     }
 
     private void CreateBrain()

@@ -239,8 +239,7 @@ public class Grid : MonoBehaviour
             return;
         }
 
-        //unitGridBehaviour.UnitDragBegin();
-        unitGridBehaviour.SetNavMeshAgentActive(false); // Turn off navmesh agent to prevent collision while dragging.
+        unitGridBehaviour.UnitDragBegin();
         unitGridBehaviour.SetCurrentCell(cell);
         
         //TODO: Change material to Transparent for duration of dragging.
@@ -328,7 +327,7 @@ public class Grid : MonoBehaviour
             return;
         }
         
-        unitGridBehaviour.SetNavMeshAgentActive(true);
+        unitGridBehaviour.UnitDragEnd();
         _unitBeingDragged = null;
         
         //TODO: Change material back from Transparent.

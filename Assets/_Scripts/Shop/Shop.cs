@@ -151,6 +151,8 @@ public class Shop : MonoBehaviour
             BehaviourTree behaviourTree = _selectedCardUnit.GetBehaviourTree();
             UnitGridBehaviour unitGridBehaviour = newUnit.AddComponent<UnitGridBehaviour>();
             
+            newUnit.SetFaction(0);
+            
             OnGridUnitCreated?.Invoke(newUnit);
             
             AIController aiController = newUnit.GetComponentInChildren<AIController>();

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using NodeCanvas.BehaviourTrees;
 using NodeCanvas.Framework;
+using NodeCanvas.Tasks.Actions;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,18 +15,18 @@ using UnityEngine.Serialization;
 
 public class Brain
 {
-    private NavMeshAgent _navMeshAgent;
+    internal NavMeshAgent navMeshAgent;
     private BehaviourTreeOwner _behaviourTreeOwner;
     private Blackboard _blackboard;
     private Unit _controlledUnit;
     private readonly MovementComponent _unitMovementComponent;
-    //private UnitGridBehaviour _unitGridBehaviour;
+    
 
     private Unit _targetUnit;
-    
 
-    public List<Vector3> _cellPositions = new List<Vector3>(70);
-    
+    public Variable selfPosition;
+    public Variable navMeshDestination;
+    public Variable target;
     
     
     public Brain(Unit controlledUnit)
@@ -32,11 +34,11 @@ public class Brain
         _controlledUnit = controlledUnit;
 
         _unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
-        _navMeshAgent = _controlledUnit.AddComponent<NavMeshAgent>();
-        //_unitGridBehaviour = _controlledUnit.AddComponent<UnitGridBehaviour>();
+        navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
+        
         _behaviourTreeOwner = _controlledUnit.AddComponent<BehaviourTreeOwner>();
         _blackboard = _controlledUnit.AddComponent<Blackboard>();
-
+        
         _behaviourTreeOwner.blackboard = _blackboard;
 
         InitializeBlackboard();
@@ -44,20 +46,34 @@ public class Brain
 
     private void InitializeBlackboard()
     {
-        /*if (_targetUnit == null)
-        {
-            Debug.LogError("Brain.InitializeBlackboard: _targetUnit is Null.");
-            return;
-        }*/
+        
+        selfPosition = _blackboard.AddVariable<Vector3>("_selfPosition");
+        MemberInfo[] transformData = _controlledUnit.transform.GetType().GetMember("position");
+        BindProperty(selfPosition, transformData);
+        
+        navMeshDestination = _blackboard.AddVariable<Vector3>("_navMeshDestination");
+        MemberInfo[] navMeshData = navMeshAgent.GetType().GetMember("destination");
+        BindProperty(navMeshDestination, navMeshData);
+        
+        /*target = _blackboard.AddVariable<GameObject>("_target");
+        MemberInfo[] targetData = _navMeshAgent.GetType().GetMember("destination");
+        BindProperty(target, navMeshData);*/
         
         
-        Variable test = _blackboard.AddVariable<Vector3>("_selfPosition", _controlledUnit.transform.position);
         
-        test.BindProperty(typeof(Transform).GetMember("Position", BindingFlags.Instance | BindingFlags.NonPublic).FirstOrDefault());
-        Variable navMeshDestination = _blackboard.AddVariable("_navMeshDestination", _navMeshAgent.destination);
-        _blackboard.AddVariable("_stoppingDistance", _navMeshAgent.stoppingDistance);
+        
+        
+        //test.BindProperty(memberInfos[0], _controlledUnit.gameObject);
+        //test.BindProperty(typeof(Transform).GetMember("Position", BindingFlags.Instance | BindingFlags.NonPublic).FirstOrDefault());
+        //Variable navMeshDestination = _blackboard.AddVariable("_navMeshDestination", _navMeshAgent.destination);
+        //_blackboard.AddVariable("_stoppingDistance", _navMeshAgent.stoppingDistance);
         //_blackboard.AddVariable("_targetPosition", _targetUnit.transform.position);
         //_blackboard.AddVariable("_target", _targetUnit);
+    }
+
+    private void BindProperty(Variable blackboardVariable, MemberInfo[] binding)
+    {
+        blackboardVariable.BindProperty(binding[0], _controlledUnit.gameObject);
     }
     
     /*private void Awake()
