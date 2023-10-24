@@ -11,31 +11,28 @@ public class TargetingComponent : MonoBehaviour
     [SerializeField] private float radiusOfSphereCast = 1f; // This should be tied to attack range, no?
     private Vector3 originPosition;
 
-    private void Start()
+    public Unit EvaluateTarget(Unit currentTarget)
     {
-        List<GameObject> gameObjects = SphereCast();
-        foreach (GameObject Unit in gameObjects)
+        GameObject closestUnit = null;
+
+        foreach (GameObject unit in SphereCast())
         {
-            Debug.Log(Unit.name);
+            if (unit.GetComponent<Unit>().GetFaction() == currentTarget.GetFaction())
+            {
+                closestUnit = unit;
+                break;
+            }
         }
-
-        Debug.Log($"Count: {gameObjects.Count}");
-        
-    }
-
-    public Unit EvaluateTarget(Unit _currentTarget)
-    {
-        GameObject closestUnit = SphereCast()[0];
-        float distanceToCurrentTarget = Vector3.Distance(transform.position, _currentTarget.transform.position);
+        float distanceToCurrentTarget = Vector3.Distance(transform.position, currentTarget.transform.position);
         float distanceToClosestUnit = Vector3.Distance(transform.position, closestUnit.transform.position);
 
 
-        return distanceToClosestUnit < distanceToCurrentTarget ? closestUnit.GetComponent<Unit>() : _currentTarget;
+        return distanceToClosestUnit < distanceToCurrentTarget ? closestUnit.GetComponent<Unit>() : currentTarget;
     }
 
     //Spherecast from above to below, storing units in a sorted list.
     //Excludes self
-    public List<GameObject> SphereCast()
+    private List<GameObject> SphereCast()
     {
         List<GameObject> unitsHit = new List<GameObject>();
         List<GameObject> unitsOrderedByDistance = new List<GameObject>();
@@ -54,14 +51,12 @@ public class TargetingComponent : MonoBehaviour
             }
         }
         
-        
         //Order by distance
         if (unitsHit.Count > 0)
         {
             unitsOrderedByDistance = unitsHit.OrderBy(go => Vector3.Distance(go.transform.position, position)).ToList();
         }
         
-
         return unitsHit.Count > 0 ? unitsOrderedByDistance : null;
     }
     

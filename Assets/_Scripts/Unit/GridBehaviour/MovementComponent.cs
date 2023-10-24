@@ -10,7 +10,7 @@ public class MovementComponent : MonoBehaviour
     //MovementComponent can also sometimes be responsible or handling collision solutions
     private NavMeshAgent _navMeshAgent;
 
-    private void Start()
+    private void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
     }
@@ -19,9 +19,13 @@ public class MovementComponent : MonoBehaviour
     {
         //Check to see if newPosition is on NavMesh
         NavMeshPath path = new NavMeshPath();
+        Debug.Log($"New position is null: {newPosition == null}");
+        Debug.Log($"path is null: {path == null}");
+        Debug.Log($"_navMeshAgent is null: {_navMeshAgent == null}");
         _navMeshAgent.CalculatePath(newPosition, path);
+        Debug.Log("after");
 
-        if (path.status is NavMeshPathStatus.PathInvalid or NavMeshPathStatus.PathInvalid)
+        if (path.status is NavMeshPathStatus.PathPartial or NavMeshPathStatus.PathInvalid)
         {
             Debug.LogError("MovementComponent.MoveTo: newPosition is not a valid point on NavMesh.");
             return;

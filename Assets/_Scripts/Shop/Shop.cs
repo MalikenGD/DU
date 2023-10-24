@@ -144,24 +144,12 @@ public class Shop : MonoBehaviour
         {
             GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
             Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
-            BehaviourTree behaviourTree = _selectedCardUnit.GetBehaviourTree();
             UnitCombatDataSO unitCombatData = _selectedCardUnit.GetUnitCombatData();
             UnitGridBehaviour unitGridBehaviour = newUnit.AddComponent<UnitGridBehaviour>();
             
             newUnit.SetFaction(0); // Temporary
             
             OnGridUnitCreated?.Invoke(newUnit, unitCombatData);
-            
-            AIController aiController = newUnit.GetComponentInChildren<AIController>();
-            bool isAIControllerNull = aiController == null;
-
-            if (isAIControllerNull)
-            {
-                Debug.LogError("Shop.CreateUnit: AIControllerIsNull for New Unit.");
-                //Can't return, too late in code?
-            }
-        
-            aiController.SetBehaviourTree(behaviourTree);
             
             World.Instance.OnGameStateChanged += unitGridBehaviour.OnGameStateChanged;
             

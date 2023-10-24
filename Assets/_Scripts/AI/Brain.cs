@@ -45,6 +45,8 @@ public class Brain
 
         InitializeCombatData();
         InitializeBlackboard();
+
+        _behaviourTreeOwner.StartBehaviour();
     }
 
     private void InitializeCombatData()
@@ -63,6 +65,7 @@ public class Brain
         _blackboard = _controlledUnit.AddComponent<Blackboard>();
         
         _behaviourTreeOwner.blackboard = _blackboard;
+        _behaviourTreeOwner.behaviour = _unitCombatDataSO.GetInitialBehaviourTree();
     }
 
     private void InitializeBlackboard()
@@ -97,22 +100,6 @@ public class Brain
         blackboardVariable.BindProperty(binding[0], _controlledUnit.gameObject);
     }
     
-    /*private void Awake()
-    {
-        for (int i = 0; i < 7; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                _cellPositions.Add(new Vector3(i + 51,0,j + 21));
-            }
-        }
-    }*/
-
-    private void MoveTo(Vector3 newPosition)
-    {
-        _unitMovementComponent.MoveTo(newPosition);
-    }
-
     internal void OnGameStateChanged(GameState newGameState)
     {
         switch (newGameState)
@@ -129,10 +116,5 @@ public class Brain
                 Debug.LogError("Brain.OnGameStateChanged: State out of range.");
                 break;
         }
-    }
-
-    public void SetBehaviourTree(BehaviourTree behaviourTree)
-    {
-        _behaviourTreeOwner.behaviour = behaviourTree;
     }
 }

@@ -9,7 +9,6 @@ public class UnitDataSO : ScriptableObject
 {
     [SerializeField] private GameObject unitPrefab;
     [SerializeField] private UnitCombatDataSO unitCombatDataSO;
-    [SerializeField] private BehaviourTree behaviourTree;
     [SerializeField] private string unitName;
     [SerializeField] private Sprite spriteForShopBackground;
     [SerializeField] private int unitGoldCost;
@@ -23,11 +22,7 @@ public class UnitDataSO : ScriptableObject
     {
         return unitBrainprefab;
     }*/
-
-    public BehaviourTree GetBehaviourTree()
-    {
-        return behaviourTree;
-    }
+    
 
     public string GetUnitName()
     {

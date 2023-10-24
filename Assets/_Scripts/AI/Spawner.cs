@@ -10,12 +10,16 @@ using UnityEngine.InputSystem;
 
 public class Spawner : MonoBehaviour
 {
-    private GlobalBlackboard _test;
-    private Variable _testUnits;
+    //Spawner should ideally hold RoundData to determine units/number to spawn.
+    private GlobalBlackboard _globalBlackboard;
+    private Variable _blackboardUnits;
     [SerializeField] private Unit unitToSpawn;
+    [SerializeField] private UnitCombatDataSO unitCombatDataSO;
+    [SerializeField] private AIController aiControllerPrefab;
     private Unit unitSpawned;
     [SerializeField] private Transform destination;
     private NavMeshAgent _unitNavMeshAgent;
+    private MovementComponent _movementComponent;
     private float _timeBetweenSpawns = 0.7f;
     private float _timeElapsed;
     
@@ -23,15 +27,15 @@ public class Spawner : MonoBehaviour
     
     //debug
     private bool spawning = true;
-    private List<GameObject> testing = new List<GameObject>();
+    private List<GameObject> _Units = new List<GameObject>();
+    private TargetingComponent _targetingComponent;
 
     private void Start()
     {
-        _test = FindObjectOfType<GlobalBlackboard>();
-        _testUnits = _test.GetVariable("_unitsOnNavmesh");
+        _globalBlackboard = FindObjectOfType<GlobalBlackboard>();
+        _blackboardUnits = _globalBlackboard.GetVariable("_unitsOnNavmesh");
 
-        testing = _testUnits.value as List<GameObject>;
-        
+        _Units = _blackboardUnits.value as List<GameObject>;
         
         
         
@@ -44,28 +48,36 @@ public class Spawner : MonoBehaviour
             return;
         }
         
-        if (Keyboard.current.aKey.wasPressedThisFrame)
-        {
-            _unitNavMeshAgent.SetDestination(destination.position);
-        }
-        
         _timeElapsed += Time.deltaTime;
         if (_timeBetweenSpawns < _timeElapsed)
         {
             
             _timeElapsed = 0f;
-            unitSpawned = Instantiate(unitToSpawn, transform.position, quaternion.identity);
+            SpawnUnit();
             unitSpawned.SetFaction(1);
-            //unitSpawned.AddComponent<UnitGridBehaviour>();
-            unitSpawned.AddComponent<NavMeshAgent>();
             
+
+
             _unitNavMeshAgent = unitSpawned.GetComponent<NavMeshAgent>();
+            _movementComponent = unitSpawned.GetComponent<MovementComponent>();
             _unitNavMeshAgent.enabled = false;
             _unitNavMeshAgent.enabled = true;
-            _unitNavMeshAgent.SetDestination(destination.position);
-            testing.Add(unitSpawned.gameObject);
+            _movementComponent.MoveTo(destination.position);
+            _Units.Add(unitSpawned.gameObject);
             //Debug.Log(testing.Count);
 
         }
     }
+
+    private void SpawnUnit()
+    {
+        unitSpawned = World.Instance.BuildUnit(unitToSpawn.gameObject);
+        unitSpawned.transform.position = transform.position;
+        unitSpawned.gameObject.AddComponent<NavMeshAgent>();
+        
+        AIController aiController = Instantiate(aiControllerPrefab, transform.parent, true);
+        aiController.Initialize(unitSpawned, unitCombatDataSO);
+        
+        aiController.transform.parent = unitSpawned.transform;
+}
 }

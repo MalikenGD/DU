@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 3471266004572004271, guid: b58606e695b7a5247b14385cf4c5f477,
     type: 3}
-  behaviourTree: {fileID: 11400000, guid: df9d5ecb7e5b4c040bac87c7087f4d58, type: 2}
+  unitCombatDataSO: {fileID: 11400000, guid: 33121caac8ca23d43b01583ca67ae90f, type: 2}
   unitName: Bone Golem
   spriteForShopBackground: {fileID: 21300000, guid: d8c5b826cec58624f9e59e52db8042fb,
     type: 3}

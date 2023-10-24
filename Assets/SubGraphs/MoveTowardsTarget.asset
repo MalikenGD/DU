@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a686a47eee2fa44cb0a34b5d86e4d5e, type: 3}
   m_Name: MoveTowardsTarget
   m_EditorClassIdentifier: 
-  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_action":{"target":{"_name":"_target","_targetVariableID":"4bf1477d-677a-4ae8-8ffd-ac13b277548e"},"speed":{"_value":4.0},"keepDistance":{"_value":0.1},"$type":"NodeCanvas.Tasks.Actions.MoveToGameObject"},"_position":{"x":981.0,"y":519.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode"}],"connections":[],"canvasGroups":[],"localBlackboard":{"_variables":{"_target":{"_name":"_target","_id":"4bf1477d-677a-4ae8-8ffd-ac13b277548e","_isPublic":true,"$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
+  _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"_action":{"target":{"_name":"_target","_targetVariableID":"4bf1477d-677a-4ae8-8ffd-ac13b277548e"},"speed":{"_value":4.0},"keepDistance":{"_value":0.1},"$type":"NodeCanvas.Tasks.Actions.MoveToGameObject"},"_position":{"x":603.0,"y":451.0},"$type":"NodeCanvas.BehaviourTrees.ActionNode"}],"connections":[],"canvasGroups":[],"localBlackboard":{"_variables":{"_target":{"_name":"_target","_id":"4bf1477d-677a-4ae8-8ffd-ac13b277548e","_isPublic":true,"$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
     UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}}},"derivedData":{"repeat":true,"$type":"NodeCanvas.BehaviourTrees.BehaviourTree+DerivedSerializationData"}}'
   _objectReferences: []
   _graphSource:
