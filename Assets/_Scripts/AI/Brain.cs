@@ -48,7 +48,7 @@ public class Brain
     {
         
         selfPosition = _blackboard.AddVariable<Vector3>("_selfPosition");
-        MemberInfo[] transformData = _controlledUnit.transform.GetType().GetMember("position");
+        MemberInfo[] transformData = typeof(Transform).GetMember("position");
         BindProperty(selfPosition, transformData);
         
         navMeshDestination = _blackboard.AddVariable<Vector3>("_navMeshDestination");
