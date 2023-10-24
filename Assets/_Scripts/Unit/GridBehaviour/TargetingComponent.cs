@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class TargetingComponent : MonoBehaviour
 {
-    [SerializeField] private float heightModifier;
-    [SerializeField] private float radiusOfSphereCast; // This should be tied to attack range, no?
+    [SerializeField] private float heightModifier = 2.5f;
+    [SerializeField] private float radiusOfSphereCast = 1f; // This should be tied to attack range, no?
     private Vector3 originPosition;
 
     private void Start()
@@ -23,7 +23,18 @@ public class TargetingComponent : MonoBehaviour
         
     }
 
+    public Unit EvaluateTarget(Unit _currentTarget)
+    {
+        GameObject closestUnit = SphereCast()[0];
+        float distanceToCurrentTarget = Vector3.Distance(transform.position, _currentTarget.transform.position);
+        float distanceToClosestUnit = Vector3.Distance(transform.position, closestUnit.transform.position);
+
+
+        return distanceToClosestUnit < distanceToCurrentTarget ? closestUnit.GetComponent<Unit>() : _currentTarget;
+    }
+
     //Spherecast from above to below, storing units in a sorted list.
+    //Excludes self
     public List<GameObject> SphereCast()
     {
         List<GameObject> unitsHit = new List<GameObject>();

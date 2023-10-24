@@ -6,23 +6,32 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class AIController : Controller
 {
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private UnitGridBehaviour unitGridBehaviour; 
     private Unit _controlledUnit;
+    private UnitCombatDataSO _unitCombatDataSO;
+
     
     //AIController should support multiple brains/BTs?
     private Brain _brain;
 
-    public void Initialize(Unit unit)
+    public void Initialize(Unit unit, UnitCombatDataSO unitCombatDataSO)
     {
         SetControlledUnit(unit);
+        SetUnitCombatData(unitCombatDataSO);
         navMeshAgent = GetComponentInParent<NavMeshAgent>();
         CreateBrain();
         navMeshAgent = _brain.navMeshAgent;
 
+    }
+
+    private void SetUnitCombatData(UnitCombatDataSO unitCombatDataSO)
+    {
+        _unitCombatDataSO = unitCombatDataSO;
     }
 
     public void ToggleNavMesh()
@@ -45,7 +54,7 @@ public class AIController : Controller
 
     private void CreateBrain()
     {
-        _brain = new Brain(_controlledUnit);
+        _brain = new Brain(_controlledUnit, _unitCombatDataSO);
         World.Instance.OnGameStateChanged += _brain.OnGameStateChanged;
     }
 

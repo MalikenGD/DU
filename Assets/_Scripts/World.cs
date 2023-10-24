@@ -121,7 +121,6 @@ public class World : MonoBehaviour
 
     public Unit BuildUnit(GameObject unitPrefab)
     {
-        //faction 0 = enemy unit, faction 1 = player unit
         Unit unit = _unitFactory.BuildUnit(unitPrefab, gameObject.transform);
 
         if (unit == null)

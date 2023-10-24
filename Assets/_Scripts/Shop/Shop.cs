@@ -18,7 +18,7 @@ public class Shop : MonoBehaviour
     
     [SerializeField] private int maxCardsAllowedInHand = 5;
 
-    public event Action<Unit> OnGridUnitCreated;
+    public event Action<Unit, UnitCombatDataSO> OnGridUnitCreated;
     
     private Grid _grid;
     private Player _player; // For gold?
@@ -26,8 +26,7 @@ public class Shop : MonoBehaviour
     private List<UnitDataSO> _units;
     private List<Card> _cardsInHand = new List<Card>();
     private UnitDataSO _selectedCardUnit;
-
-
+    
     private void Start()
     {
         _units = shopData.GetUnitDataSOList();
@@ -41,10 +40,7 @@ public class Shop : MonoBehaviour
         RandomizeHandOfCards();
         World.Instance.BuildUI(shopData.GetShopUIPrefab(), this);
     }
-
     
-
-
     private void InitializeCards()
     {
         GameObject cardPrefab = shopData.GetCardPrefab();
@@ -149,11 +145,12 @@ public class Shop : MonoBehaviour
             GridPosition selectedCellGridPosition = _grid.GetSelectedCell().GetGridPosition();
             Vector3 spawningPosition = _grid.ConvertFromGridPositionToWorldPosition(selectedCellGridPosition);
             BehaviourTree behaviourTree = _selectedCardUnit.GetBehaviourTree();
+            UnitCombatDataSO unitCombatData = _selectedCardUnit.GetUnitCombatData();
             UnitGridBehaviour unitGridBehaviour = newUnit.AddComponent<UnitGridBehaviour>();
             
-            newUnit.SetFaction(0);
+            newUnit.SetFaction(0); // Temporary
             
-            OnGridUnitCreated?.Invoke(newUnit);
+            OnGridUnitCreated?.Invoke(newUnit, unitCombatData);
             
             AIController aiController = newUnit.GetComponentInChildren<AIController>();
             bool isAIControllerNull = aiController == null;
@@ -172,26 +169,6 @@ public class Shop : MonoBehaviour
             
             _grid.SetUnitAtSelectedCell(newUnit);
         }
-        
-
-        
-
-        //Someone should subscribe to this, but maybe it's brain?\
-        //This is mostly for turning on/off the navmesh,
-        //But will eventually be for resetting unit position (movement component?)
-        //And Resetting health (health component?)
-        
-        
-        
-        //Create unit
-        //--
-        //
-        //--
-        //Register(?) unit to the GameMode
-        //GameMode creates AIController
-        //GameMode assigns AIController new Unit
-        //AIController creates Brain and passes in this unit as ControlledUnit
-        //Brain then communicates with MovementComponent
     }
 
     public void SetPlayerReference(Player player)

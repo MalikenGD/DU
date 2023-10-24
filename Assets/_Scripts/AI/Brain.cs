@@ -15,11 +15,15 @@ using UnityEngine.Serialization;
 
 public class Brain
 {
+    private UnitCombatDataSO _unitCombatDataSO;
     internal NavMeshAgent navMeshAgent;
+    private TargetingComponent _targetingComponent;
+    private AttackComponent _attackComponent;
+    private HealthComponent _healthComponent;
     private BehaviourTreeOwner _behaviourTreeOwner;
     private Blackboard _blackboard;
     private Unit _controlledUnit;
-    private readonly MovementComponent _unitMovementComponent;
+    private MovementComponent _unitMovementComponent;
     
 
     private Unit _targetUnit;
@@ -29,19 +33,36 @@ public class Brain
     public Variable target;
     
     
-    public Brain(Unit controlledUnit)
+    public Brain(Unit controlledUnit, UnitCombatDataSO unitCombatDataSO)
     {
+        _unitCombatDataSO = unitCombatDataSO;
+        if (_unitCombatDataSO == null)
+        {
+            Debug.LogError("Brain.Brain(Constructor): _unitCombatDataSO is Null.");
+            return;
+        }
         _controlledUnit = controlledUnit;
 
+        InitializeCombatData();
+        InitializeBlackboard();
+    }
+
+    private void InitializeCombatData()
+    {
         _unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
         navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
+        _targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
+        
+        _attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
+        _attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());
+        
+        _healthComponent = _controlledUnit.gameObject.AddComponent<HealthComponent>();
+        _healthComponent.SetInitialHealth(_unitCombatDataSO.GetInitialHealth());
         
         _behaviourTreeOwner = _controlledUnit.AddComponent<BehaviourTreeOwner>();
         _blackboard = _controlledUnit.AddComponent<Blackboard>();
         
         _behaviourTreeOwner.blackboard = _blackboard;
-
-        InitializeBlackboard();
     }
 
     private void InitializeBlackboard()

@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
     private Unit unitSpawned;
     [SerializeField] private Transform destination;
     private NavMeshAgent _unitNavMeshAgent;
-    private float _timeBetweenSpawns = 3f;
+    private float _timeBetweenSpawns = 0.7f;
     private float _timeElapsed;
     
     
