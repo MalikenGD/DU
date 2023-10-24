@@ -2205,7 +2205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79246b0d60f350b4db9fe94e148398de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitToSpawn: {fileID: 8058747660996357409, guid: e0ba1b209ccf4ca43bde4281ab2eb59b,
+  unitToSpawn: {fileID: 4413700728070704840, guid: 9805d75c094361144b6eac6c3e74d008,
+    type: 3}
+  unitCombatDataSO: {fileID: 11400000, guid: 87767ab6c15fe2041aeb0085db5772c1, type: 2}
+  aiControllerPrefab: {fileID: 4056237942349796132, guid: 759cfeb1172044a499e993e28d8f83b3,
     type: 3}
   destination: {fileID: 204455430}
 --- !u!4 &1825103996

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 6348438899653972713, guid: c6127a2c0f1737d458acc99e01a94887,
     type: 3}
-  behaviourTree: {fileID: 11400000, guid: 51a71e3cccbe36247b468dd666797dc5, type: 2}
+  unitCombatDataSO: {fileID: 11400000, guid: 33121caac8ca23d43b01583ca67ae90f, type: 2}
   unitName: Tomb Shade
   spriteForShopBackground: {fileID: 21300000, guid: 543f78b66b354014aa8d2eb89754cf47,
     type: 3}

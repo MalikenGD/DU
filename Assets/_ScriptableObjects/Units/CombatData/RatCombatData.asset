@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d511237008c9d6540ae7b52dd3c55015, type: 3}
   m_Name: RatCombatData
   m_EditorClassIdentifier: 
-  behaviourTree: {fileID: 0}
+  behaviourTree: {fileID: 11400000, guid: df9d5ecb7e5b4c040bac87c7087f4d58, type: 2}
   initialHealth: 5
   initialAttackDamage: 1
   initialAttackSpeed: 1

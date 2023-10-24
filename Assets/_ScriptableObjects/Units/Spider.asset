@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 4214389502600945268, guid: e0ba1b209ccf4ca43bde4281ab2eb59b,
     type: 3}
-  behaviourTree: {fileID: 11400000, guid: 3a2498175e01d584386dfbd5ac677450, type: 2}
+  unitCombatDataSO: {fileID: 11400000, guid: 33121caac8ca23d43b01583ca67ae90f, type: 2}
   unitName: Spider
   spriteForShopBackground: {fileID: 21300000, guid: 2bbdddecd5cb4024ab886ce593660bcd,
     type: 3}
