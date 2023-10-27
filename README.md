@@ -6,7 +6,7 @@ DU is a project built around scalability and modularity. Throughout the process 
 
 The project is built on Unity 2023.3.11F1, but should work on any version of Unity 2023.3 LTS. 
 
-## Built With
+## Tools Used
 
 * [Node Canvas](https://assetstore.unity.com/packages/tools/visual-scripting/nodecanvas-14914) - Data driven behaviour tree in-editor. 
 * [SPAM](https://assetstore.unity.com/packages/tools/utilities/spam-spell-projectile-ability-magic-framework-204027) - Ability System aiming to mimic the functionality of Unreal's GAS (Gameplay Ability System).
