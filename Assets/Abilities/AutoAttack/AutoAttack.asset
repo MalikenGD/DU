@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ddaa97dff54665438e7398b335f29c7, type: 3}
+  m_Name: AutoAttack
+  m_EditorClassIdentifier: 
+  _id: 1
+  _name: AutoAttack
+  _description: A basic attack all units have, with a target.
+  _icon: {fileID: 0}
+  _cooldownType: 0
+  _abilityCooldown: 2
+  _castRange: 0
+  _requiresAbilityTarget: 1
+  _customSettings: {fileID: 0}
+  _telegraph: 0
+  _abilityEffects:
+  - Effect: {fileID: 11400000, guid: 298fe4fd820ceb94a9b8857cb27c89a5, type: 2}
+    EffectTime: 0
+    ApplyOnCaster: 0
+  _effectRadius: 0
+  _areaOfEffectType: 0
+  _maxEffectTargets: 1
+  _lineOfSightCheck: 0
+  _losBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  _effectLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  _effectApplication: 0
+  _perTargetEffectApplicationDelay: 0
+  _animationTimings: {fileID: 0}
+  _abilityVfx: {fileID: 0}
+  _abilitySfx: {fileID: 0}
+  _conditionConstraints: []
+  _applyBeforeEffects: 0
+  _conditionalEffects: []
+  _castOnSelf: 0

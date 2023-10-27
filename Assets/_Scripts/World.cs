@@ -121,7 +121,7 @@ public class World : MonoBehaviour
 
     public Unit BuildUnit(GameObject unitPrefab)
     {
-        Unit unit = _unitFactory.BuildUnit(unitPrefab, gameObject.transform);
+        Unit unit = _unitFactory.BuildUnit(unitPrefab, null);
 
         if (unit == null)
         {

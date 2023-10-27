@@ -51,9 +51,9 @@ public class Brain
 
     private void InitializeCombatData()
     {
-        _unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
+        /*_unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
         navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
-        _targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
+        */_targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
         
         _attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
         _attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());
@@ -71,13 +71,13 @@ public class Brain
     private void InitializeBlackboard()
     {
         
-        selfPosition = _blackboard.AddVariable<Vector3>("_selfPosition");
+        /*selfPosition = _blackboard.AddVariable<Vector3>("_selfPosition");
         MemberInfo[] transformData = typeof(Transform).GetMember("position");
         BindProperty(selfPosition, transformData);
         
         navMeshDestination = _blackboard.AddVariable<Vector3>("_navMeshDestination");
         MemberInfo[] navMeshData = navMeshAgent.GetType().GetMember("destination");
-        BindProperty(navMeshDestination, navMeshData);
+        BindProperty(navMeshDestination, navMeshData);*/
         
         /*target = _blackboard.AddVariable<GameObject>("_target");
         MemberInfo[] targetData = _navMeshAgent.GetType().GetMember("destination");

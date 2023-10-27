@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NodeCanvas.Framework;
+using ProjectDawn.Navigation.Hybrid;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -54,15 +55,17 @@ public class Spawner : MonoBehaviour
             
             _timeElapsed = 0f;
             SpawnUnit();
+            spawning = false;
             unitSpawned.SetFaction(1);
             
 
 
-            _unitNavMeshAgent = unitSpawned.GetComponent<NavMeshAgent>();
-            _movementComponent = unitSpawned.GetComponent<MovementComponent>();
-            _unitNavMeshAgent.enabled = false;
-            _unitNavMeshAgent.enabled = true;
-            _movementComponent.MoveTo(destination.position);
+            //_unitNavMeshAgent = unitSpawned.GetComponent<NavMeshAgent>();
+            //_movementComponent = unitSpawned.GetComponent<MovementComponent>();
+            ////var _moveTo = unitSpawned.GetComponent<AgentAuthoring>();
+            //_unitNavMeshAgent.enabled = false;
+            //_unitNavMeshAgent.enabled = true;
+            //_movementComponent.MoveTo(destination.position);
             _Units.Add(unitSpawned.gameObject);
             //Debug.Log(testing.Count);
 
@@ -73,7 +76,7 @@ public class Spawner : MonoBehaviour
     {
         unitSpawned = World.Instance.BuildUnit(unitToSpawn.gameObject);
         unitSpawned.transform.position = transform.position;
-        unitSpawned.gameObject.AddComponent<NavMeshAgent>();
+        //unitSpawned.gameObject.AddComponent<NavMeshAgent>();
         
         
         AIController aiController = Instantiate(aiControllerPrefab, transform.parent, true);

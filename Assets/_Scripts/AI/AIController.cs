@@ -22,9 +22,9 @@ public class AIController : Controller
     {
         SetControlledUnit(unit);
         SetUnitCombatData(unitCombatDataSO);
-        NavMeshAgent navMeshAgent = GetComponentInParent<NavMeshAgent>();
+        //NavMeshAgent navMeshAgent = GetComponentInParent<NavMeshAgent>();
         CreateBrain();
-        navMeshAgent = _brain.navMeshAgent;
+        //navMeshAgent = _brain.navMeshAgent;
 
     }
 

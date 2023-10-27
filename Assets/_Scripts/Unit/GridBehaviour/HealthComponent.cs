@@ -1,13 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour
 {
     private int _initialHealth;
-    private int _currentHealth;
+    [SerializeField] private int _currentHealth;
+
+    private void Start()
+    {
+        _currentHealth = _initialHealth;
+    }
+
     public void TakeDamage(int damageValue)
     {
+        Debug.Log($"Taking damage: {damageValue}");
         if (_currentHealth > damageValue)
         {
             _currentHealth -= damageValue;
@@ -20,7 +29,8 @@ public class HealthComponent : MonoBehaviour
 
     private void Die()
     {
-        //
+        Debug.Log("Death");
+        gameObject.SetActive(false);
     }
 
     public void SetInitialHealth(int initialHealth)
