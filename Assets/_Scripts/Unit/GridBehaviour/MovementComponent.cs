@@ -19,11 +19,7 @@ public class MovementComponent : MonoBehaviour
     {
         //Check to see if newPosition is on NavMesh
         NavMeshPath path = new NavMeshPath();
-        Debug.Log($"New position is null: {newPosition == null}");
-        Debug.Log($"path is null: {path == null}");
-        Debug.Log($"_navMeshAgent is null: {_navMeshAgent == null}");
         _navMeshAgent.CalculatePath(newPosition, path);
-        Debug.Log("after");
 
         if (path.status is NavMeshPathStatus.PathPartial or NavMeshPathStatus.PathInvalid)
         {

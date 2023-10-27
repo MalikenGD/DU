@@ -75,6 +75,7 @@ public class Spawner : MonoBehaviour
         unitSpawned.transform.position = transform.position;
         unitSpawned.gameObject.AddComponent<NavMeshAgent>();
         
+        
         AIController aiController = Instantiate(aiControllerPrefab, transform.parent, true);
         aiController.Initialize(unitSpawned, unitCombatDataSO);
         
