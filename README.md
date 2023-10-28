@@ -1,6 +1,6 @@
 # DU
 
-DU is a project built around scalability and modularity. Throughout the process I've had to refine my experience with certain subjects (Beahviour Trees, Body & Soul delegation for unit logic, Ability Systems, and more). The goal is to replicate AAA development methodoligies and systems design for creation of modular and extensible code. 
+DU is a project built around scalability and modularity. Throughout the process I've had to refine my experience with certain subjects (Behaviour Trees, Body & Soul delegation for unit logic, Ability Systems, and more). The goal is to replicate AAA development methodoligies and systems design for creation of modular and extensible code. 
 
 ## Getting Started
 
