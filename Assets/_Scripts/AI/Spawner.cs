@@ -55,7 +55,7 @@ public class Spawner : MonoBehaviour
             
             _timeElapsed = 0f;
             SpawnUnit();
-            spawning = false;
+            //spawning = false;
             unitSpawned.SetFaction(1);
             
 

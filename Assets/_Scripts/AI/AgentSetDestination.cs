@@ -8,7 +8,7 @@ public class AgentSetDestination : MonoBehaviour
 {
     private void Start()
     {
-        MoveTo(new Vector3(55, transform.position.y, 25));
+        MoveTo(new Vector3(51, transform.position.y, 21));
     }
 
     public void MoveTo(Vector3 newPosition)

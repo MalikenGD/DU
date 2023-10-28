@@ -13,13 +13,14 @@ GameObject:
   - component: {fileID: -2442983123946522853}
   - component: {fileID: 3739659545041119386}
   - component: {fileID: 1144270042641506618}
-  - component: {fileID: 3831829365505636046}
   - component: {fileID: 761840557933052441}
   - component: {fileID: -8202223073292432381}
   - component: {fileID: -7571746836218888952}
   - component: {fileID: -7456962182411060243}
   - component: {fileID: 8486111148785534967}
   - component: {fileID: 1691975918457309091}
+  - component: {fileID: -6375271810096100888}
+  - component: {fileID: -6343466337861155999}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Unit
@@ -119,22 +120,8 @@ MonoBehaviour:
   Speed: 15
   Acceleration: 8
   AngularSpeed: 120
-  StoppingDistance: 1
+  StoppingDistance: 0.1
   AutoBreaking: 1
---- !u!114 &3831829365505636046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 842788214119597134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fed5c6dd07c7d6e4f857b420fa8f559a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Radius: 0.3
-  Height: 2
 --- !u!114 &761840557933052441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,9 +137,9 @@ MonoBehaviour:
   Radius: 2
   Angle: 230
   MaxAngle: 300
-  Mode: 0
+  Mode: 3
   BlockedStop: 0
-  UseWalls: 0
+  UseWalls: 1
 --- !u!114 &-8202223073292432381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AgentTypeId: 0
   AreaMask: -1
-  AutoRepath: 0
+  AutoRepath: 1
   MappingExtent:
     x: 10
     y: 10
@@ -225,6 +212,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ability: {fileID: 7885812262050231156}
+--- !u!114 &-6375271810096100888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842788214119597134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fed5c6dd07c7d6e4f857b420fa8f559a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Radius: 0.4
+  Height: 2
+--- !u!114 &-6343466337861155999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842788214119597134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d72058503702eb42aca97d680e69de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3322502023640623873
 GameObject:
   m_ObjectHideFlags: 0
