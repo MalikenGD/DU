@@ -17,7 +17,7 @@ MonoBehaviour:
   _description: A basic attack all units have, with a target.
   _icon: {fileID: 0}
   _cooldownType: 0
-  _abilityCooldown: 2
+  _abilityCooldown: 0.5
   _castRange: 0
   _requiresAbilityTarget: 1
   _customSettings: {fileID: 0}

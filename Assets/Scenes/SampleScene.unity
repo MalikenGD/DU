@@ -2146,6 +2146,7 @@ MonoBehaviour:
   _serializedBlackboard: '{"_variables":{"_unitsOnNavmesh":{"_value":[],"_name":"_unitsOnNavmesh","_id":"da98840a-8e45-4360-87cb-3cb3a7d28942","$type":"NodeCanvas.Framework.Variable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject,
     UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"_tickDelay":{"_value":1.0,"_name":"_tickDelay","_id":"7856c346-e5cb-41b3-a8ac-4696b36a25a9","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+    mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"},"_unitDetectionRange":{"_value":8,"_name":"_unitDetectionRange","_id":"6430d560-117b-4401-89dd-46c7ec07813e","$type":"NodeCanvas.Framework.Variable`1[[System.Int32,
     mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}}}'
   _objectReferences: []
   _serializedVariables:
@@ -2154,6 +2155,9 @@ MonoBehaviour:
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
     _references: []
   - _json: '{"_value":1.0,"_name":"_tickDelay","_id":"7856c346-e5cb-41b3-a8ac-4696b36a25a9","$type":"NodeCanvas.Framework.Variable`1[[System.Single,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
+    _references: []
+  - _json: '{"_value":8,"_name":"_unitDetectionRange","_id":"6430d560-117b-4401-89dd-46c7ec07813e","$type":"NodeCanvas.Framework.Variable`1[[System.Int32,
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]"}'
     _references: []
   _UID: c47d950a-cc93-4dea-91dc-78009d46c397

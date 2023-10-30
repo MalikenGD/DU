@@ -117,10 +117,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MotionType: 2
-  Speed: 15
+  Speed: 6
   Acceleration: 8
-  AngularSpeed: 120
-  StoppingDistance: 0.1
+  AngularSpeed: 999
+  StoppingDistance: 1
   AutoBreaking: 1
 --- !u!114 &761840557933052441
 MonoBehaviour:

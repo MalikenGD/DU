@@ -77,7 +77,8 @@ public class Spawner : MonoBehaviour
         unitSpawned = World.Instance.BuildUnit(unitToSpawn.gameObject);
         unitSpawned.transform.position = transform.position;
         //unitSpawned.gameObject.AddComponent<NavMeshAgent>();
-        
+        AgentSetDestination temp = unitSpawned.GetComponent<AgentSetDestination>();
+        temp.MoveTo(new Vector3(54, transform.position.y, 10));;
         
         AIController aiController = Instantiate(aiControllerPrefab, transform.parent, true);
         aiController.Initialize(unitSpawned, unitCombatDataSO);

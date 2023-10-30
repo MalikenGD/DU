@@ -23,7 +23,7 @@ public class UnitGridBehaviour : MonoBehaviour
     {
         _globalBlackboard = FindObjectOfType<GlobalBlackboard>();
         _targets = _globalBlackboard.GetVariable("_unitsOnNavmesh");
-        _navMeshAgent = gameObject.AddComponent<NavMeshAgent>();
+        //_navMeshAgent = gameObject.AddComponent<NavMeshAgent>();
         
         _homePosition = transform.position;
     }

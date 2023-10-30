@@ -53,7 +53,8 @@ public class Brain
     {
         /*_unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
         navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
-        */_targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
+        */
+        _targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
         
         _attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
         _attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());

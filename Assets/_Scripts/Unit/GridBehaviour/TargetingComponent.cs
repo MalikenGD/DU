@@ -13,21 +13,58 @@ public class TargetingComponent : MonoBehaviour
 
     public Unit EvaluateTarget(Unit currentTarget)
     {
+        GameObject nearestUnit;
+
+        foreach (GameObject unit in SphereCast())
+        {
+            int unitFaction = unit.GetComponent<Unit>().GetFaction();
+            int myFaction = GetComponent<Unit>().GetFaction();
+            if (myFaction != unitFaction)
+            {
+                if (unit.activeSelf)
+                {
+                    return unit.GetComponent<Unit>();
+                }
+            }
+        }
+
+        return null;
+
+
+        /*if (currentTarget != null)
+        {
+            if (!currentTarget.gameObject.activeSelf)
+            {
+                return null;
+            }
+        }
+
         GameObject closestUnit = null;
 
         foreach (GameObject unit in SphereCast())
         {
-            if (unit.GetComponent<Unit>().GetFaction() == currentTarget.GetFaction())
+            if (!unit.gameObject.activeSelf)
+            {
+
+                continue;
+            }
+            Debug.Log("2");
+
+            int myFaction = GetComponent<Unit>().GetFaction();
+            if (unit.GetComponent<Unit>().GetFaction() != myFaction)
             {
                 closestUnit = unit;
                 break;
             }
         }
-        float distanceToCurrentTarget = Vector3.Distance(transform.position, currentTarget.transform.position);
-        float distanceToClosestUnit = Vector3.Distance(transform.position, closestUnit.transform.position);
 
+        if (closestUnit == null)
+        {
+            Debug.LogError("TargetingComponent.EvaluateTarget: ClosestUnit is Null.");
+            return null;
+        }
 
-        return distanceToClosestUnit < distanceToCurrentTarget ? closestUnit.GetComponent<Unit>() : currentTarget;
+        return closestUnit.GetComponent<Unit>();*/
     }
 
     //Spherecast from above to below, storing units in a sorted list.

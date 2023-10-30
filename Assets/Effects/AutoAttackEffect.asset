@@ -15,5 +15,5 @@ MonoBehaviour:
   _name: AutoAttackEffect
   _description: 
   _includedInAbilityEffects: 1
-  _damageValue: 1
+  _damageValue: 5
   _logDamage: 1

@@ -34,7 +34,6 @@ public class Unit : MonoBehaviour, IAbilityTarget, IDamageable
         HealthComponent healthComponent = GetComponent<HealthComponent>();
         if (healthComponent != null)
         {
-            Debug.Log("3");
             healthComponent.TakeDamage(damageAmount);
         }
     }
