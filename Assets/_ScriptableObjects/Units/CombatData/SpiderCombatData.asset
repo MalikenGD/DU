@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d511237008c9d6540ae7b52dd3c55015, type: 3}
-  m_Name: RatCombatData
+  m_Name: SpiderCombatData
   m_EditorClassIdentifier: 
-  behaviourTree: {fileID: 11400000, guid: df9d5ecb7e5b4c040bac87c7087f4d58, type: 2}
-  combatClass: 0
+  behaviourTree: {fileID: 11400000, guid: 72ce399344421424d930c420c79d3b44, type: 2}
+  combatClass: 2
   characterStats: []
   initialHealth:
-    BaseValue: 0
+    BaseValue: 25
   initialAttackDamage:
     BaseValue: 0
   initialAttackSpeed:
     BaseValue: 0
   initialAttackRange:
     BaseValue: 0
-  targetingRange: 7
+  targetingRange: 0

@@ -55,6 +55,9 @@ public class Brain
         navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
         */
         _targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
+        _targetingComponent.SetCombatClass(_unitCombatDataSO.GetCombatClass());
+        _targetingComponent.SetAttackRange(_unitCombatDataSO.GetInitialAttackRange());
+        _targetingComponent.SetTargetingRange(_unitCombatDataSO.GetTargetingRange());
         
         _attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
         _attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());

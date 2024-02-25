@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using InfiniteVoid.SpamFramework.Core.ExternalSystems;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -7,12 +8,17 @@ using UnityEngine.AI;
 public class Unit : MonoBehaviour, IAbilityTarget, IDamageable
 {
     private int _faction;
+    [SerializeField]
+    private List<CharacterStat> stats;
     
     public Transform Transform { get; private set; }
+    
+    
 
     private void Start()
     {
         Transform = transform;
+        stats = new List<CharacterStat>();
     }
 
     public void SetFaction(int faction)

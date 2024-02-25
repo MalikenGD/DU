@@ -10,10 +10,9 @@ using UnityEngine.Serialization;
 
 public class AIController : Controller
 {
-    private UnitGridBehaviour _unitGridBehaviour; 
     private Unit _controlledUnit;
+    private UnitGridBehaviour _unitGridBehaviour; 
     private UnitCombatDataSO _unitCombatDataSO;
-
     
     //AIController should support multiple brains/BTs?
     private Brain _brain;

@@ -13,6 +13,14 @@ MonoBehaviour:
   m_Name: BoneGolemCombatData
   m_EditorClassIdentifier: 
   behaviourTree: {fileID: 11400000, guid: df9d5ecb7e5b4c040bac87c7087f4d58, type: 2}
-  initialHealth: 5000
-  initialAttackDamage: 1
-  initialAttackSpeed: 1
+  combatClass: 0
+  characterStats: []
+  initialHealth:
+    BaseValue: 55
+  initialAttackDamage:
+    BaseValue: 0
+  initialAttackSpeed:
+    BaseValue: 0
+  initialAttackRange:
+    BaseValue: 0
+  targetingRange: 0
