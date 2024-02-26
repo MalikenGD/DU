@@ -121,4 +121,40 @@ public class Brain
                 break;
         }
     }
+
+    //Evaluates list of SortedUnits by CombatClass(UnitCombatDataSO) specific targeting logic
+    public Unit EvaluateAndReturnNewTarget(List<Unit> sortedUnitsWithinTargetRange)
+    {
+        Unit newTarget = null;
+        
+        switch (_unitCombatDataSO.GetCombatClass())
+        {
+            case CombatClass.Assassin:
+                //Find unit that matches preferred CombatClass on lowest Y world position
+                foreach (Unit unit in sortedUnitsWithinTargetRange)
+                {
+                    if (unit.GetComponent<AIController>().GetCombatClass() != CombatClass.Ranged)
+                    {
+                        continue;
+                    }
+
+                    if (newTarget == null)
+                    {
+                        newTarget = unit;
+                    } else
+                    {
+                        newTarget = unit.transform.position.y < newTarget.transform.position.y ? unit : newTarget;
+                        break;
+                    }
+                }
+                break;
+            
+            //If nothing else, choose nearest target to you and set as new target
+            default:
+                newTarget = sortedUnitsWithinTargetRange[0];
+                break;
+        }
+
+        return newTarget;
+    }
 }

@@ -9,53 +9,40 @@ public class TargetingComponent : MonoBehaviour
 {
     [SerializeField] private float heightModifier = 2.5f;
     private Unit _currentTarget = null;
+    private bool _currentTargetOutOfRange;
     private float _radiusOfSphereCast;
     private Vector3 _myPositionGizmos;
     private CombatClass _combatClass;
     private int _attackRange;
-    private float _attackRangeGraceDistance; // Wiggle room, added to attack range
+    private float _attackRangeWiggleRoom; // Wiggle room, added to attack range
     private int _targetingRange;
 
-    public void ChooseTarget()
+    public bool IsCurrentTargetInRange()
     {
-        //Throw to brain? Inherited TargetingComponent? 
-        
-        
-        
-        switch (_combatClass)
+        //Has target died or otherwise been disabled
+        if (_currentTarget == null || _currentTarget.gameObject.activeInHierarchy == false)
         {
-            case(CombatClass.Assassin):
-                //if assassin, choose furthest target
-                //spherecast
-                //sort by distance
-                //if in targetrange / 2 (or maybe just targeting range?)
-                //...but it's quite large for assassins
-                //jump
-
-                break;
-            case(CombatClass.MageKiller):
-                //if magekiller, choose any mana user
-                break;
-            default:
-                //if melee/ranged, choose nearest target
-                break;
+            return false;
         }
+        
+        return Vector3.Distance
+               (_currentTarget.transform.position, transform.position) <= (_attackRange + _attackRangeWiggleRoom);
     }
 
-    public Unit EvaluateTarget()
+    /*public Unit EvaluateTarget()
     {
         Unit newTarget = null;
         
         if (_currentTarget != null)
         {
-            if (Vector3.Distance(_currentTarget.transform.position, transform.position) <= (_attackRange + _attackRangeGraceDistance))
+            if (Vector3.Distance(_currentTarget.transform.position, transform.position) <= (_attackRange + _attackRangeWiggleRoom))
             {
                 //Maybe add wiggle room so you can still attack despite moving +0.5f?
                 return _currentTarget;
             }
         }
         
-        List<GameObject> enemyUnitsInTargetRange = GetSortedEnemiesInTargetRange();
+        List<Unit> enemyUnitsInTargetRange = GetSortedEnemiesInTargetRange();
         if (enemyUnitsInTargetRange == null)
         {
             Debug.Log(
@@ -63,7 +50,7 @@ public class TargetingComponent : MonoBehaviour
             return null;
         }
 
-        foreach (GameObject unit in enemyUnitsInTargetRange)
+        foreach (Unit unit in enemyUnitsInTargetRange)
         {
             //If we've set a new target during a previous enumeration
             if (newTarget != null)
@@ -97,7 +84,7 @@ public class TargetingComponent : MonoBehaviour
 
         //TODO:
         //Pretty sure all this and below is irrelevant now 
-        foreach (GameObject unit in GetSortedEnemiesInTargetRange())
+        /*foreach (GameObject unit in GetSortedEnemiesInTargetRange())
         {
             int unitFaction = unit.GetComponent<Unit>().GetFaction();
             int myFaction = GetComponent<Unit>().GetFaction();
@@ -108,7 +95,7 @@ public class TargetingComponent : MonoBehaviour
                     return unit.GetComponent<Unit>();
                 }
             }
-        }
+        }#1#
 
         return null;
 
@@ -146,15 +133,15 @@ public class TargetingComponent : MonoBehaviour
             return null;
         }
 
-        return closestUnit.GetComponent<Unit>();*/
-    }
+        return closestUnit.GetComponent<Unit>();#1#
+    }*/
 
     //Spherecast from above to below, storing units in a sorted list, excluding self.
     //Sorts by range to self
-    private List<GameObject> GetSortedEnemiesInTargetRange()
+    public List<Unit> GetSortedEnemiesInTargetRange()
     {
         _radiusOfSphereCast = _targetingRange;
-        List<GameObject> unitsHit = new List<GameObject>();
+        List<Unit> unitsHit = new List<Unit>();
         Vector3 myPosition = transform.position;
         Vector3 sphereCastStartPosition = new Vector3(myPosition.x, myPosition.y + (2 * heightModifier), myPosition.z);
         
@@ -191,7 +178,7 @@ public class TargetingComponent : MonoBehaviour
                 }
             }
                 
-            unitsHit.Add(raycastHit.collider.gameObject);
+            unitsHit.Add(raycastHit.collider.gameObject.GetComponent<Unit>());
         }
         
         // Sort list by Range to self
@@ -223,5 +210,10 @@ public class TargetingComponent : MonoBehaviour
     public void SetTargetingRange(int targetingRange)
     {
         _targetingRange = targetingRange;
+    }
+
+    public void SetTarget(Unit newTarget)
+    {
+        _currentTarget = newTarget;
     }
 }

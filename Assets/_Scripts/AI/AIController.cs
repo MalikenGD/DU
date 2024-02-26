@@ -13,6 +13,7 @@ public class AIController : Controller
     private Unit _controlledUnit;
     private UnitGridBehaviour _unitGridBehaviour; 
     private UnitCombatDataSO _unitCombatDataSO;
+    private TargetingComponent _targetingComponent;
     
     //AIController should support multiple brains/BTs?
     private Brain _brain;
@@ -53,5 +54,35 @@ public class AIController : Controller
     public override void HandleInputs()
     {
         //Take input from Brain
+    }
+
+    private void Update()
+    {
+        if (!_targetingComponent.IsCurrentTargetInRange())
+        {
+            List<Unit> sortedUnitsWithinTargetRange = _targetingComponent.GetSortedEnemiesInTargetRange();
+            
+            if (sortedUnitsWithinTargetRange.Count <= 0)
+            {
+                Debug.Log(
+                    "AIController.Update: enemyUnitsInTargetRange is null. No nearby units to evaluate?");
+                return;
+            }
+            
+            Unit newTarget = _brain.EvaluateAndReturnNewTarget(sortedUnitsWithinTargetRange);
+
+            if (newTarget == null)
+            {
+                Debug.Log("AIController.Update: newTarget is Null.");
+                return;
+            }
+            _targetingComponent.SetTarget(newTarget);
+            
+        }
+    }
+
+    public CombatClass GetCombatClass()
+    {
+        return _unitCombatDataSO.GetCombatClass();
     }
 }
