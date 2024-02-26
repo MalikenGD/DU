@@ -43,54 +43,41 @@ public class Brain
         }
         _controlledUnit = controlledUnit;
 
-        InitializeCombatData();
+        //InitializeCombatData();
         InitializeBlackboard();
 
         _behaviourTreeOwner.StartBehaviour();
     }
 
-    private void InitializeCombatData()
+    
+
+    private void InitializeBlackboard()
     {
-        /*_unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
-        navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
-        */
-        _targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
-        _targetingComponent.SetCombatClass(_unitCombatDataSO.GetCombatClass());
-        _targetingComponent.SetAttackRange(_unitCombatDataSO.GetInitialAttackRange());
-        _targetingComponent.SetTargetingRange(_unitCombatDataSO.GetTargetingRange());
-        
-        _attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
-        _attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());
-        
-        _healthComponent = _controlledUnit.gameObject.AddComponent<HealthComponent>();
-        _healthComponent.SetInitialHealth(_unitCombatDataSO.GetInitialHealth());
         
         _behaviourTreeOwner = _controlledUnit.AddComponent<BehaviourTreeOwner>();
         _blackboard = _controlledUnit.AddComponent<Blackboard>();
         
         _behaviourTreeOwner.blackboard = _blackboard;
         _behaviourTreeOwner.behaviour = _unitCombatDataSO.GetInitialBehaviourTree();
-    }
 
-    private void InitializeBlackboard()
-    {
-        
+
+
         /*selfPosition = _blackboard.AddVariable<Vector3>("_selfPosition");
         MemberInfo[] transformData = typeof(Transform).GetMember("position");
         BindProperty(selfPosition, transformData);
-        
+
         navMeshDestination = _blackboard.AddVariable<Vector3>("_navMeshDestination");
         MemberInfo[] navMeshData = navMeshAgent.GetType().GetMember("destination");
         BindProperty(navMeshDestination, navMeshData);*/
-        
+
         /*target = _blackboard.AddVariable<GameObject>("_target");
         MemberInfo[] targetData = _navMeshAgent.GetType().GetMember("destination");
         BindProperty(target, navMeshData);*/
-        
-        
-        
-        
-        
+
+
+
+
+
         //test.BindProperty(memberInfos[0], _controlledUnit.gameObject);
         //test.BindProperty(typeof(Transform).GetMember("Position", BindingFlags.Instance | BindingFlags.NonPublic).FirstOrDefault());
         //Variable navMeshDestination = _blackboard.AddVariable("_navMeshDestination", _navMeshAgent.destination);
@@ -155,6 +142,13 @@ public class Brain
                 break;
         }
 
+        UpdateBlackboard("_hasTarget", newTarget != null);
+
         return newTarget;
+    }
+
+    private void UpdateBlackboard<T>(string variableName, T value)
+    {
+        _behaviourTreeOwner.blackboard.SetVariableValue(variableName, value);
     }
 }

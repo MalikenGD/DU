@@ -4,31 +4,32 @@ using UnityEngine;
 
 public class AttackComponent : MonoBehaviour
 {
-    private Unit _target;
+    private int _attackSpeed;
     private int _attackDamage;
+    private float _lastAttackTime;
+    private Unit _target;  
     private HealthComponent _healthComponent;
-
-    public bool AttackUnit(Unit target)
+    
+    public bool CanAttack()
     {
-        if (_target == null)
-        {
-            _target = target;
-        }
-        
-        TryGetComponent<HealthComponent>(out HealthComponent enemyHealthComponent);
+        float currentTime = Time.realtimeSinceStartup;
+        return currentTime - _attackSpeed <= _lastAttackTime;
+    }
 
-        if (enemyHealthComponent != null)
-        {
-            enemyHealthComponent.TakeDamage(_attackDamage);
-            return true;
-        }
+    public void AttackUnit(Unit target)
+    {
+        target.GetComponent<HealthComponent>().TakeDamage(_attackDamage);
 
-        return false;
-        
+        _lastAttackTime = Time.realtimeSinceStartup;
     }
 
     public void SetInitialDamage(int initialAttackDamage)
     {
         _attackDamage = initialAttackDamage;
+    }
+
+    public void SetInitialAttackSpeed(int initialAttackSpeed)
+    {
+        _attackSpeed = initialAttackSpeed;
     }
 }

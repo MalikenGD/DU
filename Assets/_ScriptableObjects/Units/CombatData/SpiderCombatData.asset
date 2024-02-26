@@ -23,4 +23,4 @@ MonoBehaviour:
     BaseValue: 0
   initialAttackRange:
     BaseValue: 0
-  targetingRange: 0
+  targetingRange: 15

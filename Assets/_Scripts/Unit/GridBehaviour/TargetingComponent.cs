@@ -16,6 +16,16 @@ public class TargetingComponent : MonoBehaviour
     private int _attackRange;
     private float _attackRangeWiggleRoom; // Wiggle room, added to attack range
     private int _targetingRange;
+    private const int TARGET_SWITCH_DELAY = 1;
+    private float _timeUntilNextTargetSwitch = 0f;
+
+    private void Update()
+    {
+        if (_timeUntilNextTargetSwitch < 1f)
+        {
+            _timeUntilNextTargetSwitch += Time.deltaTime;
+        }
+    }
 
     public bool IsCurrentTargetInRange()
     {
@@ -28,113 +38,6 @@ public class TargetingComponent : MonoBehaviour
         return Vector3.Distance
                (_currentTarget.transform.position, transform.position) <= (_attackRange + _attackRangeWiggleRoom);
     }
-
-    /*public Unit EvaluateTarget()
-    {
-        Unit newTarget = null;
-        
-        if (_currentTarget != null)
-        {
-            if (Vector3.Distance(_currentTarget.transform.position, transform.position) <= (_attackRange + _attackRangeWiggleRoom))
-            {
-                //Maybe add wiggle room so you can still attack despite moving +0.5f?
-                return _currentTarget;
-            }
-        }
-        
-        List<Unit> enemyUnitsInTargetRange = GetSortedEnemiesInTargetRange();
-        if (enemyUnitsInTargetRange == null)
-        {
-            Debug.Log(
-                "TargetingComponent.EvaluateTarget: enemyUnitsInTargetRange is null. No nearby units to evaluate?");
-            return null;
-        }
-
-        foreach (Unit unit in enemyUnitsInTargetRange)
-        {
-            //If we've set a new target during a previous enumeration
-            if (newTarget != null)
-            {
-                break;
-            }
-            
-            switch (unit.GetComponent<TargetingComponent>()._combatClass)
-            {
-                case CombatClass.Ranged:
-                    newTarget = unit.GetComponent<Unit>();
-                    break;
-            }
-        }
-        
-        //If No nearby unit was suitable
-        if (newTarget == null)
-        {
-            //Set nearest unit as Target regardless of CombatClass
-            return enemyUnitsInTargetRange[0].GetComponent<Unit>();
-        }
-        
-        
-            
-        //maybe this throws the list to a specialized brain (assassin brain) that takes the list
-        //and spits out the target it wants, and if it returns not null, then it exits this method
-        //and if it returns null,we just choose enemy closest?
-        
-        
-        
-
-        //TODO:
-        //Pretty sure all this and below is irrelevant now 
-        /*foreach (GameObject unit in GetSortedEnemiesInTargetRange())
-        {
-            int unitFaction = unit.GetComponent<Unit>().GetFaction();
-            int myFaction = GetComponent<Unit>().GetFaction();
-            if (myFaction != unitFaction)
-            {
-                if (unit.activeSelf)
-                {
-                    return unit.GetComponent<Unit>();
-                }
-            }
-        }#1#
-
-        return null;
-
-
-        /*if (currentTarget != null)
-        {
-            if (!currentTarget.gameObject.activeSelf)
-            {
-                return null;
-            }
-        }
-
-        GameObject closestUnit = null;
-
-        foreach (GameObject unit in SphereCast())
-        {
-            if (!unit.gameObject.activeSelf)
-            {
-
-                continue;
-            }
-            Debug.Log("2");
-
-            int myFaction = GetComponent<Unit>().GetFaction();
-            if (unit.GetComponent<Unit>().GetFaction() != myFaction)
-            {
-                closestUnit = unit;
-                break;
-            }
-        }
-
-        if (closestUnit == null)
-        {
-            Debug.LogError("TargetingComponent.EvaluateTarget: ClosestUnit is Null.");
-            return null;
-        }
-
-        return closestUnit.GetComponent<Unit>();#1#
-    }*/
 
     //Spherecast from above to below, storing units in a sorted list, excluding self.
     //Sorts by range to self
@@ -186,8 +89,8 @@ public class TargetingComponent : MonoBehaviour
         {
             unitsHit = unitsHit.OrderBy(go => Vector3.Distance(go.transform.position, myPosition)).ToList();
         }
-        
-        return unitsHit.Count > 0 ? unitsHit : null;
+
+        return unitsHit;
     }
     
     void OnDrawGizmos()
@@ -215,5 +118,16 @@ public class TargetingComponent : MonoBehaviour
     public void SetTarget(Unit newTarget)
     {
         _currentTarget = newTarget;
+        _timeUntilNextTargetSwitch = 0f;
+    }
+
+    public bool CanChangeTarget()
+    {
+        return _timeUntilNextTargetSwitch >= TARGET_SWITCH_DELAY;
+    }
+
+    public Unit GetCurrentTarget()
+    {
+        return _currentTarget;
     }
 }

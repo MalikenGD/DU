@@ -16,7 +16,7 @@ public class HealthComponent : MonoBehaviour
 
     public void TakeDamage(int damageValue)
     {
-        Debug.Log($"Taking damage: {damageValue}");
+        Debug.Log($"{transform.name} taking damage: {damageValue}");
         if (_currentHealth > damageValue)
         {
             _currentHealth -= damageValue;
@@ -29,6 +29,8 @@ public class HealthComponent : MonoBehaviour
 
     private void Die()
     {
+        //TODO:
+        //Make sure any lists containing this unit you remove from and unsub to any events?
         Debug.Log("Death");
         gameObject.SetActive(false);
     }
