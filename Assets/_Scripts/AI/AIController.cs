@@ -81,14 +81,19 @@ public class AIController : Controller
         //Take input from Brain
     }
 
-    public void Attack()
+    /*public bool CanAttack()
+    {
+        return _attackComponent.AttackReady() && _targetingComponent.IsCurrentTargetInRange() && _targetingComponent.BehindTarget();
+    }*/
+
+    /*public void Attack()
     {
         //Attempt to Attack
-        if (_targetingComponent.IsCurrentTargetInRange() && _attackComponent.CanAttack())
+        if (_targetingComponent.IsCurrentTargetInRange() && _attackComponent.AttackReady())
         {
             _attackComponent.AttackUnit(_targetingComponent.GetCurrentTarget());
         }
-    }
+    }*/
 
     public void Move()
     {
@@ -110,6 +115,9 @@ public class AIController : Controller
 
     private void Update()
     {
+        //Tick system? Delay?
+        _brain.Update();
+        
         //Check targeting
         if (!_targetingComponent.IsCurrentTargetInRange() && _targetingComponent.CanChangeTarget())
         {

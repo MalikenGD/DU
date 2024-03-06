@@ -2,16 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Unit.GridBehaviour;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TargetingComponent : MonoBehaviour
+public class TargetingComponent : MonoBehaviour, IComponent
 {
-    [SerializeField] private float heightModifier = 2.5f;
-    private Unit _currentTarget = null;
+    [SerializeField] private float sphereCastHeightModifier = 2.5f;
+    protected Unit _currentTarget = null;
     private bool _currentTargetOutOfRange;
     private float _radiusOfSphereCast;
-    private Vector3 _myPositionGizmos;
     private CombatClass _combatClass;
     private int _attackRange;
     private float _attackRangeWiggleRoom; // Wiggle room, added to attack range
@@ -21,11 +21,13 @@ public class TargetingComponent : MonoBehaviour
 
     private void Update()
     {
-        if (_timeUntilNextTargetSwitch < 1f)
+        /*if (_timeUntilNextTargetSwitch < 1f)
         {
             _timeUntilNextTargetSwitch += Time.deltaTime;
-        }
+        }*/
     }
+
+    
 
     public bool IsCurrentTargetInRange()
     {
@@ -46,14 +48,12 @@ public class TargetingComponent : MonoBehaviour
         _radiusOfSphereCast = _targetingRange;
         List<Unit> unitsHit = new List<Unit>();
         Vector3 myPosition = transform.position;
-        Vector3 sphereCastStartPosition = new Vector3(myPosition.x, myPosition.y + (2 * heightModifier), myPosition.z);
+        Vector3 sphereCastStartPosition = new Vector3(myPosition.x, myPosition.y + (2 * sphereCastHeightModifier), myPosition.z);
         
         int myFaction = GetComponent<Unit>().GetFaction();
         
         foreach (RaycastHit raycastHit in Physics.SphereCastAll(sphereCastStartPosition, _radiusOfSphereCast, Vector3.down))
         {
-            int unitFaction;
-            
             if (raycastHit.collider.gameObject == gameObject)
             {
                 continue;
@@ -87,15 +87,15 @@ public class TargetingComponent : MonoBehaviour
         // Sort list by Range to self
         if (unitsHit.Count > 0)
         {
-            unitsHit = unitsHit.OrderBy(go => Vector3.Distance(go.transform.position, myPosition)).ToList();
+            unitsHit = unitsHit.OrderBy(unit => Vector3.Distance(unit.transform.position, myPosition)).ToList();
         }
 
         return unitsHit;
     }
     
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        _myPositionGizmos = new Vector3(transform.position.x, transform.position.y + (2 * heightModifier), transform.position.z);
+        Vector3 _myPositionGizmos = new Vector3(transform.position.x, transform.position.y + (2 * sphereCastHeightModifier), transform.position.z);
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(_myPositionGizmos, _radiusOfSphereCast);
     }
@@ -130,4 +130,13 @@ public class TargetingComponent : MonoBehaviour
     {
         return _currentTarget;
     }
+    
+    public void Tick()
+    {
+        if (_timeUntilNextTargetSwitch < 1f)
+        {
+            _timeUntilNextTargetSwitch += Time.deltaTime;
+        }
+    }
+    
 }

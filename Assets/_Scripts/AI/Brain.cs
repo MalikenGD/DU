@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using _Scripts.Unit.GridBehaviour;
 using NodeCanvas.BehaviourTrees;
 using NodeCanvas.Framework;
 using NodeCanvas.Tasks.Actions;
@@ -23,7 +24,7 @@ public class Brain
     private BehaviourTreeOwner _behaviourTreeOwner;
     private Blackboard _blackboard;
     private Unit _controlledUnit;
-    private MovementComponent _unitMovementComponent;
+    private MovementComponent _movementComponent;
     
 
     private Unit _targetUnit;
@@ -43,13 +44,26 @@ public class Brain
         }
         _controlledUnit = controlledUnit;
 
-        //InitializeCombatData();
+        InitializeCombatData();
         InitializeBlackboard();
 
         _behaviourTreeOwner.StartBehaviour();
     }
 
-    
+    private void InitializeCombatData()
+    {
+        switch (_unitCombatDataSO.GetCombatClass())
+        {
+            case CombatClass.Assassin:
+                _attackComponent = _controlledUnit.AddComponent<AssassinAttackComponent>();
+                _targetingComponent = _controlledUnit.AddComponent<AssassinTargetingComponent>();
+                _movementComponent = _controlledUnit.AddComponent<AssassinMovementComponent>();
+                break;
+            default:
+                break;
+        }
+    }
+
 
     private void InitializeBlackboard()
     {
@@ -57,8 +71,19 @@ public class Brain
         _behaviourTreeOwner = _controlledUnit.AddComponent<BehaviourTreeOwner>();
         _blackboard = _controlledUnit.AddComponent<Blackboard>();
         
-        _behaviourTreeOwner.blackboard = _blackboard;
         _behaviourTreeOwner.behaviour = _unitCombatDataSO.GetInitialBehaviourTree();
+
+
+        switch (_unitCombatDataSO.GetCombatClass())
+        {
+            case CombatClass.Assassin:
+                _blackboard.SetVariableValue("_attackComponent", _attackComponent);
+                _blackboard.SetVariableValue("_targetingComponent", _targetingComponent);
+                _blackboard.SetVariableValue("_movementComponent", _movementComponent);
+                break;
+            default:
+                break;
+        }
 
 
 
@@ -84,6 +109,22 @@ public class Brain
         //_blackboard.AddVariable("_stoppingDistance", _navMeshAgent.stoppingDistance);
         //_blackboard.AddVariable("_targetPosition", _targetUnit.transform.position);
         //_blackboard.AddVariable("_target", _targetUnit);
+    }
+
+    public void Update()
+    {
+        switch (_unitCombatDataSO.GetCombatClass())
+        {
+            case CombatClass.Assassin:
+                
+                _blackboard.SetVariableValue("_hasTarget", _targetingComponent.GetCurrentTarget() != null);
+                _blackboard.SetVariableValue("_attackOnCooldown", _targetingComponent.GetCurrentTarget() != null);
+                _blackboard.SetVariableValue("_inRangeOfTarget", _targetingComponent.GetCurrentTarget() != null);
+                _blackboard.SetVariableValue("_behindTarget", _targetingComponent.GetCurrentTarget() != null);
+                break;
+        }
+        
+        
     }
 
     private void BindProperty(Variable blackboardVariable, MemberInfo[] binding)

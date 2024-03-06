@@ -10,7 +10,7 @@ public class AttackComponent : MonoBehaviour
     private Unit _target;  
     private HealthComponent _healthComponent;
     
-    public bool CanAttack()
+    public bool AttackReady()
     {
         float currentTime = Time.realtimeSinceStartup;
         return currentTime - _attackSpeed <= _lastAttackTime;

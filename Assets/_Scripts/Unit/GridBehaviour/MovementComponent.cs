@@ -38,4 +38,9 @@ public class MovementComponent : MonoBehaviour
         _navMeshAgent.enabled = false;
         _navMeshAgent.enabled = true;
     }
+
+    public bool BehindTarget()
+    {
+        return true;
+    }
 }
