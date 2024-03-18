@@ -8,5 +8,5 @@ using UnityEngine;
 public class ComponentDataSO : ScriptableObject
 {
     [OdinSerialize]
-    public List<IComponent> _components = new List<IComponent>();
+    public List<ITickable> _components = new List<ITickable>();
 }

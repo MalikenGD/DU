@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using Component = _Scripts.Unit.GridBehaviour.Component;
 
 public class Brain
 {
@@ -32,10 +33,26 @@ public class Brain
     public Variable selfPosition;
     public Variable navMeshDestination;
     public Variable target;
+
+    //tickables sorted by Priority
+    private List<ITickable> _tickables = new List<ITickable>(); 
+    private List<Component> _components = new List<Component>();
+    
+    //private List<Unit> _
+    private List<CharacterStat> _characterStats;
     
     
     public Brain(Unit controlledUnit, UnitCombatDataSO unitCombatDataSO)
     {
+        _components = controlledUnit.GetComponents<Component>().ToList();
+        foreach (Component component in _components)
+        {
+            if (component is ITickable tickable)
+            {
+                _tickables.Add(tickable);
+            }
+        }
+        
         _unitCombatDataSO = unitCombatDataSO;
         if (_unitCombatDataSO == null)
         {
@@ -52,7 +69,17 @@ public class Brain
 
     private void InitializeCombatData()
     {
-        switch (_unitCombatDataSO.GetCombatClass())
+        _characterStats = _unitCombatDataSO.GetCharacterStats();
+
+        foreach (Component component in _components)
+        {
+            if (component is ICombatStats combatStats)
+            {
+                combatStats.SetCharacterStats(_characterStats);
+            }
+        }
+        
+        /*switch (_unitCombatDataSO.GetCombatClass())
         {
             case CombatClass.Assassin:
                 _attackComponent = _controlledUnit.AddComponent<AssassinAttackComponent>();
@@ -61,7 +88,7 @@ public class Brain
                 break;
             default:
                 break;
-        }
+        }*/
     }
 
 
@@ -74,16 +101,17 @@ public class Brain
         _behaviourTreeOwner.behaviour = _unitCombatDataSO.GetInitialBehaviourTree();
 
 
-        switch (_unitCombatDataSO.GetCombatClass())
+        /*switch (_unitCombatDataSO.GetCombatClass())
         {
             case CombatClass.Assassin:
+                //_blackboard.AddVariable(_attackComponent.GetType().ToString());
                 _blackboard.SetVariableValue("_attackComponent", _attackComponent);
                 _blackboard.SetVariableValue("_targetingComponent", _targetingComponent);
                 _blackboard.SetVariableValue("_movementComponent", _movementComponent);
                 break;
             default:
                 break;
-        }
+        }*/
 
 
 
@@ -113,7 +141,23 @@ public class Brain
 
     public void Update()
     {
-        switch (_unitCombatDataSO.GetCombatClass())
+        //foreach component, tick
+        //so...
+
+
+        TickObjects();
+        
+        //targeting component has target
+        //if my BT expects a target, I need to get that value and update BT
+        //but if it doesn't, then I don't care?
+        
+        
+        //UpdateBlackboard();
+
+        //but they need to be in order, so... priority?
+        
+        
+        /*switch (_unitCombatDataSO.GetCombatClass())
         {
             case CombatClass.Assassin:
                 
@@ -122,9 +166,15 @@ public class Brain
                 _blackboard.SetVariableValue("_inRangeOfTarget", _targetingComponent.GetCurrentTarget() != null);
                 _blackboard.SetVariableValue("_behindTarget", _targetingComponent.GetCurrentTarget() != null);
                 break;
+        }*/
+    }
+
+    private void TickObjects()
+    {
+        foreach (ITickable tickables in _tickables)
+        {
+            tickables.Tick();
         }
-        
-        
     }
 
     private void BindProperty(Variable blackboardVariable, MemberInfo[] binding)
@@ -132,7 +182,7 @@ public class Brain
         blackboardVariable.BindProperty(binding[0], _controlledUnit.gameObject);
     }
     
-    internal void OnGameStateChanged(GameState newGameState)
+    public void OnGameStateChanged(GameState newGameState)
     {
         switch (newGameState)
         {
@@ -150,43 +200,7 @@ public class Brain
         }
     }
 
-    //Evaluates list of SortedUnits by CombatClass(UnitCombatDataSO) specific targeting logic
-    public Unit EvaluateAndReturnNewTarget(List<Unit> sortedUnitsWithinTargetRange)
-    {
-        Unit newTarget = null;
-        
-        switch (_unitCombatDataSO.GetCombatClass())
-        {
-            case CombatClass.Assassin:
-                //Find unit that matches preferred CombatClass on lowest Y world position
-                foreach (Unit unit in sortedUnitsWithinTargetRange)
-                {
-                    if (unit.GetComponent<AIController>().GetCombatClass() != CombatClass.Ranged)
-                    {
-                        continue;
-                    }
-
-                    if (newTarget == null)
-                    {
-                        newTarget = unit;
-                    } else
-                    {
-                        newTarget = unit.transform.position.y < newTarget.transform.position.y ? unit : newTarget;
-                        break;
-                    }
-                }
-                break;
-            
-            //If nothing else, choose nearest target to you and set as new target
-            default:
-                newTarget = sortedUnitsWithinTargetRange[0];
-                break;
-        }
-
-        UpdateBlackboard("_hasTarget", newTarget != null);
-
-        return newTarget;
-    }
+    
 
     private void UpdateBlackboard<T>(string variableName, T value)
     {

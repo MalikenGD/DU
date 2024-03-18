@@ -73,7 +73,7 @@ public class GameMode : MonoBehaviour
         ChangeState(GameState.GameStart);
     }
 
-    public void CreateAIController(Unit unit, UnitCombatDataSO unitCombatDataSO)
+    private void CreateAIController(Unit unit, UnitCombatDataSO unitCombatDataSO)
     {
         AIController aiController = Instantiate(aiControllerPrefab, transform.parent, true);
         aiController.Initialize(unit, unitCombatDataSO);

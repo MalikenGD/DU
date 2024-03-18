@@ -2,34 +2,53 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Scripts.Unit.Attributes.AttributeSet;
 using _Scripts.Unit.GridBehaviour;
 using Unity.VisualScripting;
 using UnityEngine;
+using Component = _Scripts.Unit.GridBehaviour.Component;
 
-public class TargetingComponent : MonoBehaviour, IComponent
+public class TargetingComponent : Component, ITickable, ICombatStats
 {
     [SerializeField] private float sphereCastHeightModifier = 2.5f;
     protected Unit _currentTarget = null;
     private bool _currentTargetOutOfRange;
     private float _radiusOfSphereCast;
-    private CombatClass _combatClass;
-    private int _attackRange;
-    private float _attackRangeWiggleRoom; // Wiggle room, added to attack range
-    private int _targetingRange;
+    protected CombatClass _combatClass;
+    protected StatAttackRange AttackRange;
+    private float _attackRangeWiggleRoom = 0.5f; // Wiggle room, added to attack range. Change how it's set? TODO:
+    private int _targetingRange = 15; // TODO: Set this somehow.
     private const int TARGET_SWITCH_DELAY = 1;
     private float _timeUntilNextTargetSwitch = 0f;
 
-    private void Update()
+    public override void Start()
     {
-        /*if (_timeUntilNextTargetSwitch < 1f)
-        {
-            _timeUntilNextTargetSwitch += Time.deltaTime;
-        }*/
+        priority = Priority.Immediate;
+        
+        base.Start();
     }
 
-    
+    public virtual void SetCharacterStats(List<CharacterStat> characterStats)
+    {
+        foreach (CharacterStat characterStat in characterStats)
+        {
+            if (characterStat is not StatAttackRange statAttackRange)
+            {
+                continue;
+            }
 
-    public bool IsCurrentTargetInRange()
+            AttackRange = statAttackRange;
+            break;
+        }
+
+        if (AttackRange == null)
+        {
+            Debug.Log("AssassinTargetingComponent.SetCharacterStats: _attackRange not set.");
+        }
+    }
+
+
+    public bool BT_IsCurrentTargetInAttackRange()
     {
         //Has target died or otherwise been disabled
         if (_currentTarget == null || _currentTarget.gameObject.activeInHierarchy == false)
@@ -38,11 +57,13 @@ public class TargetingComponent : MonoBehaviour, IComponent
         }
         
         return Vector3.Distance
-               (_currentTarget.transform.position, transform.position) <= (_attackRange + _attackRangeWiggleRoom);
+               (_currentTarget.transform.position, transform.position) <= (AttackRange.Value + _attackRangeWiggleRoom);
     }
 
     //Spherecast from above to below, storing units in a sorted list, excluding self.
     //Sorts by range to self
+    //Maybe change to overlap sphere instead? 
+    //Maybe pull out into a Sensor component? TODO:
     public List<Unit> GetSortedEnemiesInTargetRange()
     {
         _radiusOfSphereCast = _targetingRange;
@@ -71,7 +92,7 @@ public class TargetingComponent : MonoBehaviour, IComponent
                 Debug.Log($"TargetingComponent.SphereCast: Object with 'Unit' tag, has a null 'Unit' component.");
                 return null;
             }
-            // Is other unit active (and parents active) in scene
+            // Is other unit (and parents) active in scene
             if (unit.gameObject.activeInHierarchy)
             {
                 // Is other unit a part of my faction/team
@@ -92,6 +113,11 @@ public class TargetingComponent : MonoBehaviour, IComponent
 
         return unitsHit;
     }
+
+    protected virtual Unit EvaluateAndReturnNewTarget(List<Unit> sortedUnitsWithinTargetRange)
+    {
+        return null;
+    }
     
     private void OnDrawGizmos()
     {
@@ -105,16 +131,6 @@ public class TargetingComponent : MonoBehaviour, IComponent
         _combatClass = combatClass;
     }
 
-    public void SetAttackRange(int attackRange)
-    {
-        _attackRange = attackRange;
-    }
-
-    public void SetTargetingRange(int targetingRange)
-    {
-        _targetingRange = targetingRange;
-    }
-
     public void SetTarget(Unit newTarget)
     {
         _currentTarget = newTarget;
@@ -126,14 +142,19 @@ public class TargetingComponent : MonoBehaviour, IComponent
         return _timeUntilNextTargetSwitch >= TARGET_SWITCH_DELAY;
     }
 
-    public Unit GetCurrentTarget()
+    public Unit BT_GetCurrentTarget()
     {
         return _currentTarget;
     }
-    
-    public void Tick()
+
+    public bool BT_HasTarget()
     {
-        if (_timeUntilNextTargetSwitch < 1f)
+        return _currentTarget != null;
+    }
+    
+    public virtual void Tick()
+    {
+        if (_timeUntilNextTargetSwitch < TARGET_SWITCH_DELAY)
         {
             _timeUntilNextTargetSwitch += Time.deltaTime;
         }

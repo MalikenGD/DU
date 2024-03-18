@@ -19,7 +19,7 @@ public class StatModifier
     public readonly int _modifierOrder;
     public readonly object _modifierSource;
 
-    public StatModifier(StatModType type, float value, int order, object source)
+    private StatModifier(StatModType type, float value, int order, object source)
     {
         _modifierType = type;
         _modifierValue = value;

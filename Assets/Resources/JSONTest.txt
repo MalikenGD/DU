@@ -1,0 +1,19 @@
+{
+	"Units": [
+		{
+			"name": "Assassin",
+			"components": ["AssassinAttackComponent","AssassinMovementComponent","AssassinTargetingComponent"],	
+		},
+		{
+			"name": "Mage",
+			"components": ["MageAttackComponent","MageMovementComponent","TargetingComponent"],	
+		},
+		{
+			"name": "Melee",
+			"components": ["MeleeAttackComponent","MeleeMovementComponent","MeleeTargetingComponent"],	
+		},
+		
+	
+	]
+	
+}

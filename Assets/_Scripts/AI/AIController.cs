@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts.Unit.GridBehaviour;
 using NodeCanvas.BehaviourTrees;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -39,19 +40,19 @@ public class AIController : Controller
         /*_unitMovementComponent = _controlledUnit.gameObject.AddComponent<MovementComponent>();
         navMeshAgent = _controlledUnit.gameObject.GetComponent<NavMeshAgent>();
         */
-        _targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
+        
+        //_targetingComponent = _controlledUnit.gameObject.AddComponent<TargetingComponent>();
+        _targetingComponent = _controlledUnit.GetComponent<TargetingComponent>();
         _targetingComponent.SetCombatClass(_unitCombatDataSO.GetCombatClass());
-        _targetingComponent.SetAttackRange(_unitCombatDataSO.GetInitialAttackRange());
-        _targetingComponent.SetTargetingRange(_unitCombatDataSO.GetTargetingRange());
+        /*_targetingComponent.SetAttackRange(_unitCombatDataSO.GetInitialAttackRange());
+        _targetingComponent.SetTargetingRange(_unitCombatDataSO.GetTargetingRange());*/
         
-        _attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
-        _attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());
-        _attackComponent.SetInitialAttackSpeed(_unitCombatDataSO.GetInitialAttackSpeed());
+        //_attackComponent = _controlledUnit.gameObject.AddComponent<AttackComponent>();
+        /*_attackComponent.SetInitialDamage(_unitCombatDataSO.GetInitialAttackDamage());
+        _attackComponent.SetInitialAttackSpeed(_unitCombatDataSO.GetInitialAttackSpeed());*/
         
-        _healthComponent = _controlledUnit.gameObject.AddComponent<HealthComponent>();
-        _healthComponent.SetInitialHealth(_unitCombatDataSO.GetInitialHealth());
-        
-        
+        //_healthComponent = _controlledUnit.gameObject.AddComponent<HealthComponent>();
+        //_healthComponent.SetInitialHealth(_unitCombatDataSO.GetInitialHealth());
     }
 
     private void SetUnitCombatData(UnitCombatDataSO unitCombatDataSO)
@@ -116,30 +117,11 @@ public class AIController : Controller
     private void Update()
     {
         //Tick system? Delay?
+        //Iterate through and process all unit's brains to tick/update
+        
+        //foreach unit.. yada yada TODO:
         _brain.Update();
         
-        //Check targeting
-        if (!_targetingComponent.IsCurrentTargetInRange() && _targetingComponent.CanChangeTarget())
-        {
-            List<Unit> sortedUnitsWithinTargetRange = _targetingComponent.GetSortedEnemiesInTargetRange();
-            
-            if (sortedUnitsWithinTargetRange.Count <= 0)
-            {
-                Debug.Log(
-                    "AIController.Update: enemyUnitsInTargetRange is null. No nearby units to evaluate?");
-                return;
-            }
-            
-            Unit newTarget = _brain.EvaluateAndReturnNewTarget(sortedUnitsWithinTargetRange);
-
-            if (newTarget == null)
-            {
-                Debug.Log("AIController.Update: newTarget is Null.");
-                return;
-            }
-            
-            _targetingComponent.SetTarget(newTarget);
-        }
     }
 
     public CombatClass GetCombatClass()

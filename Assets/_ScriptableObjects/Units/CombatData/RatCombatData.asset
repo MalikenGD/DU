@@ -14,13 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviourTree: {fileID: 11400000, guid: df9d5ecb7e5b4c040bac87c7087f4d58, type: 2}
   combatClass: 0
-  characterStats: []
-  initialHealth:
-    BaseValue: 0
-  initialAttackDamage:
-    BaseValue: 0
-  initialAttackSpeed:
-    BaseValue: 0
-  initialAttackRange:
-    BaseValue: 0
-  targetingRange: 7
+  characterStats:
+  - rid: 8209591926629597184
+  - rid: 8209591926629597185
+  - rid: 8209591926629597186
+  - rid: 8209591926629597187
+  - rid: 8209591926629597188
+  references:
+    version: 2
+    RefIds:
+    - rid: 8209591926629597184
+      type: {class: StatAttackDamage, ns: _Scripts.Unit.Attributes.AttributeSet, asm: Assembly-CSharp}
+      data:
+        BaseValue: 0
+    - rid: 8209591926629597185
+      type: {class: StatAttackRange, ns: _Scripts.Unit.Attributes.AttributeSet, asm: Assembly-CSharp}
+      data:
+        BaseValue: 0
+    - rid: 8209591926629597186
+      type: {class: StatAttackSpeed, ns: _Scripts.Unit.Attributes.AttributeSet, asm: Assembly-CSharp}
+      data:
+        BaseValue: 0
+    - rid: 8209591926629597187
+      type: {class: StatMaxHealth, ns: _Scripts.Unit.Attributes.AttributeSet, asm: Assembly-CSharp}
+      data:
+        BaseValue: 0
+    - rid: 8209591926629597188
+      type: {class: StatMovementSpeed, ns: _Scripts.Unit.Attributes.AttributeSet,
+        asm: Assembly-CSharp}
+      data:
+        BaseValue: 0
