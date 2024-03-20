@@ -101,17 +101,31 @@ public class MovementComponent : Component, ITickable, ICombatStats
         _navMeshAgent.enabled = true;
     }
 
-    public void Tick()
+    public virtual void Tick()
     {
         
         // TODO: After X ticks, update move position to latest position of target/destination
     }
 
-    public void BT_Chase()
+    protected virtual void BT_Chase(Unit target)
     {
+        Vector3 targetPosition = target.transform.position;
+        _agentAuthoringComponent.SetDestination(new Vector3(targetPosition.x, targetPosition.y, targetPosition.z - _attackRange.Value));
+        
+        //Could take in a Vec3 from BT for target position?
+        //Could maybe use brain to update current goal destination?
         //TODO: Implement chase logic
     }
 
 
-    
+    public void UpdateGoalPosition(Vector3 newPosition)
+    {
+        Debug.Log("Updating Goal Position because of new target.");
+        _goalPosition = newPosition;
+    }
+
+    public void SetDestination(Vector3 vector3)
+    {
+        _goalPosition = vector3;
+    }
 }

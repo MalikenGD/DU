@@ -25,7 +25,7 @@ public class HealthComponent : Component, ICombatStats
             return;
         }
         
-        Debug.Log($"{gameObject.name} taking damage: {damageValue}");
+        Debug.Log($"{gameObject.GetInstanceID()} taking damage: {damageValue}");
         if (_currentHealth > damageValue)
         {
             _currentHealth -= damageValue;
@@ -38,7 +38,6 @@ public class HealthComponent : Component, ICombatStats
 
     private void Die()
     {
-        _dead = true;
         //TODO:
         //Make sure any lists containing this unit you remove from and unsub to any events?
         Debug.Log($"{gameObject.name} has died.");

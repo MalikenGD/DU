@@ -30,10 +30,6 @@ public class Brain
 
     private Unit _targetUnit;
 
-    public Variable selfPosition;
-    public Variable navMeshDestination;
-    public Variable target;
-
     //tickables sorted by Priority
     private List<ITickable> _tickables = new List<ITickable>(); 
     private List<Component> _components = new List<Component>();
@@ -78,7 +74,10 @@ public class Brain
                 combatStats.SetCharacterStats(_characterStats);
             }
         }
-        
+
+        //TODO: Gotta be a better way to do this, as there should be plenty of these events to subscribe to.
+        //_targetingComponent.OnTargetUpdated += OnTargetUpdated;
+
         /*switch (_unitCombatDataSO.GetCombatClass())
         {
             case CombatClass.Assassin:
@@ -90,8 +89,12 @@ public class Brain
                 break;
         }*/
     }
-
-
+    
+    /*private void OnTargetUpdated(Unit newTarget)
+    {
+        _movementComponent.UpdateGoalPosition(newTarget.transform.position);
+    }*/
+    
     private void InitializeBlackboard()
     {
         

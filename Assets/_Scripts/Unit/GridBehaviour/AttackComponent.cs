@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using _Scripts.Unit.Attributes.AttributeSet;
 using _Scripts.Unit.GridBehaviour;
-using Unity.VisualScripting;
 using UnityEngine;
 using Component = _Scripts.Unit.GridBehaviour.Component;
 
@@ -17,28 +16,31 @@ public class AttackComponent : Component, ITickable, ICombatStats
     public override void Start()
     {
         priority = Priority.Late;
+        //_lastAttackTime = Mathf.Infinity;
         base.Start();
     }
 
     public bool BT_AttackReady()
     {
+        Debug.Log($"Checking for attack ready. current time from startup is {Time.realtimeSinceStartup}, last attack time was {_lastAttackTime}, and my atkspd is {_attackSpeed.Value}. ");
         float currentTime = Time.realtimeSinceStartup;
-        return currentTime - _attackSpeed.Value <= _lastAttackTime;
+        return currentTime >= _lastAttackTime + _attackSpeed.Value;
     }
 
-    public void AttackUnit(Unit target)
+    public void BT_AttackUnit(Unit target)
     {
-        target.TryGetComponent<HealthComponent>(out HealthComponent unitHealthComponent);
-        if (unitHealthComponent != null)
+        Debug.Log($"{gameObject.name} with id {gameObject.GetInstanceID()} is attacking {target.gameObject.name} with id {gameObject.GetInstanceID()}");
+        target.TryGetComponent<HealthComponent>(out HealthComponent healthComponent);
+        if (healthComponent != null)
         {
-            unitHealthComponent.TakeDamage(Mathf.RoundToInt(_attackDamage.Value));
+            Debug.Log($"Dealing {_attackDamage.Value} damage.");
+            healthComponent.TakeDamage(Mathf.RoundToInt(_attackDamage.Value));
+            _lastAttackTime = Time.realtimeSinceStartup;
         }
         else
         {
-            Debug.Log("AttackComponent.AttackUnit: target's HealthComponent is null/has no HealthComponent.");
+            Debug.Log($"AttackComponent.BT_AttackUnit: target ({target.gameObject.name}) has no healthComponent or it is null.");
         }
-
-        _lastAttackTime = Time.realtimeSinceStartup;
     }
 
     public void Tick()

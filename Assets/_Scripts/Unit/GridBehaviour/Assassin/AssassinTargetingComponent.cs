@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using _Scripts.Unit.Attributes.AttributeSet;
-using _Scripts.Unit.GridBehaviour;
 using UnityEngine;
 
 public class AssassinTargetingComponent : TargetingComponent
@@ -19,51 +16,46 @@ public class AssassinTargetingComponent : TargetingComponent
         base.SetCharacterStats(characterStats);
     }
 
-    public override void Tick()
+    private Unit GetNewEnemy()
     {
-        base.Tick();
+        List<Unit> sortedUnitsWithinTargetRange = GetSortedEnemiesInTargetRange();
         
-        if (!base.BT_IsCurrentTargetInAttackRange() && base.CanChangeTarget())
+        if (sortedUnitsWithinTargetRange.Count <= 0)
         {
-            List<Unit> sortedUnitsWithinTargetRange = base.GetSortedEnemiesInTargetRange();
-            
-            if (sortedUnitsWithinTargetRange.Count <= 0)
-            {
-                Debug.Log(
-                    "AssassinTargetingComponent.Tick: enemyUnitsInTargetRange is null. No nearby units to evaluate?");
-                return;
-            }
-            
-            Unit newTarget = EvaluateAndReturnNewTarget(sortedUnitsWithinTargetRange);
-
-            if (newTarget == null)
-            {
-                Debug.Log($"AssassinTargetingComponent.Tick: newTarget is Null, {gameObject.name} failed to set new Target.");
-                return;
-            }
-            
-            SetTarget(newTarget);
-        }
-        else
-        {
-            if (base.BT_IsCurrentTargetInAttackRange() && BT_BehindTarget())
-            {
-                //TODO: Fire event: CanAttack (and send target)
-                //Maybe make it so as components are added, they subscribe or brain subscribes?
-            }
+            Debug.Log(
+                "AssassinTargetingComponent.GetFurthestEnemyOfClassType: sortedUnitsWithinTargetRange has no elements. No nearby units to evaluate?");
+            return null;
         }
 
-        UpdateBTValues();
+        return EvaluateAndReturnNewTarget(sortedUnitsWithinTargetRange);
     }
 
-    private void UpdateBTValues()
+    public override void Tick()
     {
-        //OnValuesUpdated?.Invoke();
+        if (base._timeUntilNextTargetSwitch < base._targetSwitchDelay)
+        {
+            base._timeUntilNextTargetSwitch += Time.deltaTime;
+        }
+
+        if (base.BT_HasTarget())
+        {
+            if (base.CanChangeTarget() && !base.BT_IsCurrentTargetInAttackRange())
+            {
+                base.SetTarget(GetNewEnemy());
+                return;
+            }
+        }
+        
+        if (!base.BT_HasTarget())
+        {
+            base.SetTarget(GetClosestEnemy());
+            return;
+        }
     }
 
     public bool BT_BehindTarget()
     {
-        return transform.position.y < _currentTarget.transform.position.y;
+        return transform.position.z < _currentTarget.transform.position.z;
     }
     
     //Evaluates list of SortedUnits by CombatClass(UnitCombatDataSO) specific targeting logic
@@ -84,7 +76,7 @@ public class AssassinTargetingComponent : TargetingComponent
                 newTarget = unit;
             } else
             {
-                newTarget = unit.transform.position.y < newTarget.transform.position.y ? unit : newTarget;
+                newTarget = unit.transform.position.z < newTarget.transform.position.z ? unit : newTarget;
                 break;
             }
         }
@@ -92,6 +84,12 @@ public class AssassinTargetingComponent : TargetingComponent
         
         //Send event to brain to update target? Maybe in the SetTarget function in the base class?
         //UpdateBlackboard("_hasTarget", newTarget != null);
+
+        //If we still don't have a target, choose the furthest away enemy regardless of CombatClass
+        if (newTarget == null && sortedUnitsWithinTargetRange.Count > 0)
+        {
+            newTarget = sortedUnitsWithinTargetRange[sortedUnitsWithinTargetRange.Count - 1];
+        }
 
         return newTarget;
     }

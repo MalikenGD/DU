@@ -43,4 +43,4 @@ MonoBehaviour:
     - rid: 8209591926629597189
       type: {class: StatMaxHealth, ns: _Scripts.Unit.Attributes.AttributeSet, asm: Assembly-CSharp}
       data:
-        BaseValue: 0
+        BaseValue: 500

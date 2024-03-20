@@ -10,6 +10,8 @@ using Component = _Scripts.Unit.GridBehaviour.Component;
 
 public class TargetingComponent : Component, ITickable, ICombatStats
 {
+    public event Action<Unit> OnTargetUpdated;
+    
     [SerializeField] private float sphereCastHeightModifier = 2.5f;
     protected Unit _currentTarget = null;
     private bool _currentTargetOutOfRange;
@@ -18,8 +20,8 @@ public class TargetingComponent : Component, ITickable, ICombatStats
     protected StatAttackRange AttackRange;
     private float _attackRangeWiggleRoom = 0.5f; // Wiggle room, added to attack range. Change how it's set? TODO:
     private int _targetingRange = 15; // TODO: Set this somehow.
-    private const int TARGET_SWITCH_DELAY = 1;
-    private float _timeUntilNextTargetSwitch = 0f;
+    protected int _targetSwitchDelay = 1;
+    protected float _timeUntilNextTargetSwitch = 0f;
 
     public override void Start()
     {
@@ -116,7 +118,17 @@ public class TargetingComponent : Component, ITickable, ICombatStats
 
     protected virtual Unit EvaluateAndReturnNewTarget(List<Unit> sortedUnitsWithinTargetRange)
     {
-        return null;
+        Unit newTarget = null;
+
+        if (sortedUnitsWithinTargetRange.Count <= 0)
+        {
+            Debug.Log("TargetingComponent.EvaluateAndReturnNewTarget: sortedUnitsWithinTargetRange has no elements. No nearby units to evaluate?");
+            return null;
+        }
+
+        newTarget = sortedUnitsWithinTargetRange[0];
+        
+        return newTarget;
     }
     
     private void OnDrawGizmos()
@@ -130,16 +142,43 @@ public class TargetingComponent : Component, ITickable, ICombatStats
     {
         _combatClass = combatClass;
     }
-
-    public void SetTarget(Unit newTarget)
+    
+    protected Unit GetClosestEnemy()
     {
-        _currentTarget = newTarget;
-        _timeUntilNextTargetSwitch = 0f;
+        List<Unit> sortedUnitsWithinTargetRange = GetSortedEnemiesInTargetRange();
+        
+        if (sortedUnitsWithinTargetRange.Count <= 0)
+        {
+            Debug.Log(
+                "TargetingComponent.GetClosestEnemy: sortedUnitsWithinTargetRange has no entries. No nearby units to evaluate?");
+            return null;
+        }
+
+        return EvaluateAndReturnNewTarget(sortedUnitsWithinTargetRange);
     }
 
-    public bool CanChangeTarget()
+    protected void SetTarget(Unit newTarget)
     {
-        return _timeUntilNextTargetSwitch >= TARGET_SWITCH_DELAY;
+        if (newTarget == _currentTarget)
+        {
+            return;
+        }
+        
+        _currentTarget = newTarget;
+        
+        Debug.Log($"{gameObject.name} is Updating Target!");
+        Debug.Log($"Target is {_currentTarget.name} with id {_currentTarget.GetInstanceID()}");
+        
+        
+        _timeUntilNextTargetSwitch = 0f;
+        
+        //TODO: ?
+        OnTargetUpdated?.Invoke(_currentTarget);
+    }
+
+    protected bool CanChangeTarget()
+    {
+        return _timeUntilNextTargetSwitch >= _targetSwitchDelay;
     }
 
     public Unit BT_GetCurrentTarget()
@@ -154,9 +193,25 @@ public class TargetingComponent : Component, ITickable, ICombatStats
     
     public virtual void Tick()
     {
-        if (_timeUntilNextTargetSwitch < TARGET_SWITCH_DELAY)
+        if (_timeUntilNextTargetSwitch < _targetSwitchDelay)
         {
             _timeUntilNextTargetSwitch += Time.deltaTime;
+        }
+
+        if (_currentTarget != null && _currentTarget.isActiveAndEnabled == false)
+        {
+            _currentTarget = null;
+        }
+        
+        if (!BT_HasTarget() || (CanChangeTarget() && !BT_IsCurrentTargetInAttackRange()))
+        {
+            SetTarget(GetClosestEnemy());
+            return;
+        }
+
+        if (_currentTarget == null)
+        {
+            Debug.Log($"TargetingComponent.Tick: _currentTarget for {gameObject.name} is null despite attempts to set.");
         }
     }
     
